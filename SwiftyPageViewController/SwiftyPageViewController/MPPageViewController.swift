@@ -271,17 +271,25 @@ open class MPPageViewController: UIViewController,MPPageControllerDataSource, MP
     }
     
     internal func setupDataSource() {
+
         memoryCache.countLimit = childControllerCount
         
-        let headerView = headerViewFor(self)
-        headerContentView.addSubview(headerView)
-        headerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            headerView.leadingAnchor.constraint(equalTo: headerContentView.leadingAnchor),
-            headerView.trailingAnchor.constraint(equalTo: headerContentView.trailingAnchor),
-            headerView.bottomAnchor.constraint(equalTo: headerContentView.bottomAnchor),
-            headerView.topAnchor.constraint(equalTo: headerContentView.topAnchor)
-            ])
+        if let headerView = headerViewFor(self)  {
+            headerContentView.addSubview(headerView)
+            headerView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                headerView.leadingAnchor.constraint(equalTo: headerContentView.leadingAnchor),
+                headerView.trailingAnchor.constraint(equalTo: headerContentView.trailingAnchor),
+                headerView.bottomAnchor.constraint(equalTo: headerContentView.bottomAnchor),
+                headerView.topAnchor.constraint(equalTo: headerContentView.topAnchor)
+                ])
+        }
+        else {
+            currentViewController?.mp_ChildScrollView().mp_isCanScroll = true
+        }
+        
+
+
         
         let menuView = menuViewFor(self)
         menuContentView.addSubview(menuView)
@@ -343,12 +351,18 @@ open class MPPageViewController: UIViewController,MPPageControllerDataSource, MP
         
         let scrollView = targetViewController.mp_ChildScrollView()
         scrollView.mp_originOffset = scrollView.contentOffset
-        
-        if mainScrollView.contentOffset.y < sillValue {
-            scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
-            scrollView.mp_isCanScroll = false
-            mainScrollView.mp_isCanScroll = true
+    
+        if let _ = headerViewFor(self) {
+            if mainScrollView.contentOffset.y < sillValue {
+                scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
+                scrollView.mp_isCanScroll = false
+                mainScrollView.mp_isCanScroll = true
+            }
         }
+        else {
+            scrollView.mp_isCanScroll = true
+        }
+
     }
     
     
@@ -403,9 +417,9 @@ open class MPPageViewController: UIViewController,MPPageControllerDataSource, MP
         return 0
     }
     
-    open func headerViewFor(_ pageController: MPPageViewController) -> UIView {
+    open func headerViewFor(_ pageController: MPPageViewController) -> UIView? {
         assertionFailure("Sub-class must implement the AMPageControllerDataSource method")
-        return UIView()
+        return nil
     }
     
     open func headerViewHeightFor(_ pageController: MPPageViewController) -> CGFloat {

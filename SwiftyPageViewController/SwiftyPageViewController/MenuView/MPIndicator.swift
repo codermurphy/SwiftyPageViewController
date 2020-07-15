@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-
+import SnapKit
 public enum MPIndicatorPosition {
     case top
     case center
@@ -45,11 +45,9 @@ public class MPIndicatorViewStyle {
         didSet {
             switch shape {
             case .line:
-                break
-                //targetView?.snp.updateConstraints({$0.height.equalTo(height)})
+                targetView?.snp.updateConstraints({$0.height.equalTo(height)})
             case .round:
-                //targetView?.snp.updateConstraints({$0.height.equalTo(height)})
-                break
+                targetView?.snp.updateConstraints({$0.height.equalTo(height)})
                 targetView?.layer.cornerRadius = height * 0.5
             default:
                 break
@@ -83,7 +81,7 @@ public class MPIndicatorViewStyle {
     weak var targetView: UIView? {
         didSet {
             targetView?.backgroundColor = backgroundColor
-            //targetView?.snp.updateConstraints({$0.height.equalTo(height)})
+            targetView?.snp.updateConstraints({$0.height.equalTo(height)})
             targetView?.isHidden = hidden
             switch shape {
             case .line:

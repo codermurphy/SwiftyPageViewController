@@ -1,0 +1,6 @@
+framework module Pods_SwiftyPageViewController {
+  umbrella header "Pods-SwiftyPageViewController-umbrella.h"
+
+  export *
+  module * { export * }
+}

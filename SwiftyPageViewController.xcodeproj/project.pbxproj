@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D123D7041B9E55237921179 /* Pods_SwiftyPageViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D68533D535626EE4BCE2D50 /* Pods_SwiftyPageViewController.framework */; };
 		F622883924BD47F800288CE0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F622883824BD47F800288CE0 /* AppDelegate.swift */; };
 		F622883D24BD47F800288CE0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F622883C24BD47F800288CE0 /* ViewController.swift */; };
 		F622884024BD47F800288CE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F622883E24BD47F800288CE0 /* Main.storyboard */; };
@@ -23,9 +24,23 @@
 		F622886024BDA52100288CE0 /* MPPageViewController+Additianal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F622885F24BDA52100288CE0 /* MPPageViewController+Additianal.swift */; };
 		F622886324BDAD7A00288CE0 /* MPBottomLineViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F622886224BDAD7A00288CE0 /* MPBottomLineViewStyle.swift */; };
 		F622886724BDAEEF00288CE0 /* MPIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F622886624BDAEEF00288CE0 /* MPIndicator.swift */; };
+		F6D7CA9824BE989F005F0F2D /* MPMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CA9724BE989F005F0F2D /* MPMenuItemView.swift */; };
+		F6D7CA9A24BED4BB005F0F2D /* MPMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CA9924BED4BB005F0F2D /* MPMenuView.swift */; };
+		F6D7CA9C24BEE607005F0F2D /* UIScrollView+MPMenuExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CA9B24BEE607005F0F2D /* UIScrollView+MPMenuExtension.swift */; };
+		F6D7CAA024BEE8F3005F0F2D /* Stype1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CA9F24BEE8F3005F0F2D /* Stype1ViewController.swift */; };
+		F6D7CAA224BEE92E005F0F2D /* MPPageStype1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CAA124BEE92E005F0F2D /* MPPageStype1ViewController.swift */; };
+		F6D7CAA424BEEBC9005F0F2D /* Page1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CAA324BEEBC9005F0F2D /* Page1ViewController.swift */; };
+		F6D7CAA624BEEBD4005F0F2D /* Page2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CAA524BEEBD4005F0F2D /* Page2ViewController.swift */; };
+		F6D7CAA824BEEBDA005F0F2D /* Page3ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CAA724BEEBDA005F0F2D /* Page3ViewController.swift */; };
+		F6D7CAAA24BEEBE0005F0F2D /* Page4ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CAA924BEEBE0005F0F2D /* Page4ViewController.swift */; };
+		F6D7CAAC24BEEBE7005F0F2D /* Page5ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CAAB24BEEBE7005F0F2D /* Page5ViewController.swift */; };
+		F6D7CAAE24BEEF13005F0F2D /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CAAD24BEEF13005F0F2D /* BaseViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1D68533D535626EE4BCE2D50 /* Pods_SwiftyPageViewController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftyPageViewController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		243F01D373BF769DF900B4E8 /* Pods-SwiftyPageViewController.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftyPageViewController.release.xcconfig"; path = "Target Support Files/Pods-SwiftyPageViewController/Pods-SwiftyPageViewController.release.xcconfig"; sourceTree = "<group>"; };
+		3FBFCFDD484EBDBB7AE8AA06 /* Pods-SwiftyPageViewController.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftyPageViewController.debug.xcconfig"; path = "Target Support Files/Pods-SwiftyPageViewController/Pods-SwiftyPageViewController.debug.xcconfig"; sourceTree = "<group>"; };
 		F622883524BD47F800288CE0 /* SwiftyPageViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftyPageViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F622883824BD47F800288CE0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F622883C24BD47F800288CE0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -44,6 +59,17 @@
 		F622885F24BDA52100288CE0 /* MPPageViewController+Additianal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MPPageViewController+Additianal.swift"; sourceTree = "<group>"; };
 		F622886224BDAD7A00288CE0 /* MPBottomLineViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPBottomLineViewStyle.swift; sourceTree = "<group>"; };
 		F622886624BDAEEF00288CE0 /* MPIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPIndicator.swift; sourceTree = "<group>"; };
+		F6D7CA9724BE989F005F0F2D /* MPMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPMenuItemView.swift; sourceTree = "<group>"; };
+		F6D7CA9924BED4BB005F0F2D /* MPMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPMenuView.swift; sourceTree = "<group>"; };
+		F6D7CA9B24BEE607005F0F2D /* UIScrollView+MPMenuExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+MPMenuExtension.swift"; sourceTree = "<group>"; };
+		F6D7CA9F24BEE8F3005F0F2D /* Stype1ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stype1ViewController.swift; sourceTree = "<group>"; };
+		F6D7CAA124BEE92E005F0F2D /* MPPageStype1ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPPageStype1ViewController.swift; sourceTree = "<group>"; };
+		F6D7CAA324BEEBC9005F0F2D /* Page1ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page1ViewController.swift; sourceTree = "<group>"; };
+		F6D7CAA524BEEBD4005F0F2D /* Page2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page2ViewController.swift; sourceTree = "<group>"; };
+		F6D7CAA724BEEBDA005F0F2D /* Page3ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page3ViewController.swift; sourceTree = "<group>"; };
+		F6D7CAA924BEEBE0005F0F2D /* Page4ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page4ViewController.swift; sourceTree = "<group>"; };
+		F6D7CAAB24BEEBE7005F0F2D /* Page5ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page5ViewController.swift; sourceTree = "<group>"; };
+		F6D7CAAD24BEEF13005F0F2D /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,17 +77,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D123D7041B9E55237921179 /* Pods_SwiftyPageViewController.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		455ACE15496B67F51152B419 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1D68533D535626EE4BCE2D50 /* Pods_SwiftyPageViewController.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		57F06E114E0794D960ED2A11 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3FBFCFDD484EBDBB7AE8AA06 /* Pods-SwiftyPageViewController.debug.xcconfig */,
+				243F01D373BF769DF900B4E8 /* Pods-SwiftyPageViewController.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		F622882C24BD47F800288CE0 = {
 			isa = PBXGroup;
 			children = (
 				F622883724BD47F800288CE0 /* SwiftyPageViewController */,
 				F622883624BD47F800288CE0 /* Products */,
+				57F06E114E0794D960ED2A11 /* Pods */,
+				455ACE15496B67F51152B419 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -76,6 +122,7 @@
 		F622883724BD47F800288CE0 /* SwiftyPageViewController */ = {
 			isa = PBXGroup;
 			children = (
+				F6D7CA9D24BEE8A2005F0F2D /* Example */,
 				F622884C24BD4AC900288CE0 /* SwiftyPageViewController */,
 				F622883824BD47F800288CE0 /* AppDelegate.swift */,
 				F622883C24BD47F800288CE0 /* ViewController.swift */,
@@ -90,7 +137,7 @@
 		F622884C24BD4AC900288CE0 /* SwiftyPageViewController */ = {
 			isa = PBXGroup;
 			children = (
-				F622886124BDACD700288CE0 /* HeaderView */,
+				F622886124BDACD700288CE0 /* MenuView */,
 				F622884F24BD4DB500288CE0 /* MPPageViewControllerProtocol.swift */,
 				F622885124BD4E8300288CE0 /* MPChildViewControllerProtocol.swift */,
 				F622885B24BD500900288CE0 /* MPPageViewController.swift */,
@@ -104,13 +151,39 @@
 			path = SwiftyPageViewController;
 			sourceTree = "<group>";
 		};
-		F622886124BDACD700288CE0 /* HeaderView */ = {
+		F622886124BDACD700288CE0 /* MenuView */ = {
 			isa = PBXGroup;
 			children = (
 				F622886224BDAD7A00288CE0 /* MPBottomLineViewStyle.swift */,
 				F622886624BDAEEF00288CE0 /* MPIndicator.swift */,
+				F6D7CA9724BE989F005F0F2D /* MPMenuItemView.swift */,
+				F6D7CA9924BED4BB005F0F2D /* MPMenuView.swift */,
+				F6D7CA9B24BEE607005F0F2D /* UIScrollView+MPMenuExtension.swift */,
 			);
-			path = HeaderView;
+			path = MenuView;
+			sourceTree = "<group>";
+		};
+		F6D7CA9D24BEE8A2005F0F2D /* Example */ = {
+			isa = PBXGroup;
+			children = (
+				F6D7CAAD24BEEF13005F0F2D /* BaseViewController.swift */,
+				F6D7CAA324BEEBC9005F0F2D /* Page1ViewController.swift */,
+				F6D7CAA524BEEBD4005F0F2D /* Page2ViewController.swift */,
+				F6D7CAA724BEEBDA005F0F2D /* Page3ViewController.swift */,
+				F6D7CAA924BEEBE0005F0F2D /* Page4ViewController.swift */,
+				F6D7CAAB24BEEBE7005F0F2D /* Page5ViewController.swift */,
+				F6D7CA9E24BEE8A9005F0F2D /* style1 */,
+			);
+			path = Example;
+			sourceTree = "<group>";
+		};
+		F6D7CA9E24BEE8A9005F0F2D /* style1 */ = {
+			isa = PBXGroup;
+			children = (
+				F6D7CA9F24BEE8F3005F0F2D /* Stype1ViewController.swift */,
+				F6D7CAA124BEE92E005F0F2D /* MPPageStype1ViewController.swift */,
+			);
+			path = style1;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -120,9 +193,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F622884924BD47F900288CE0 /* Build configuration list for PBXNativeTarget "SwiftyPageViewController" */;
 			buildPhases = (
+				6F4F5AF938C6C368A5A351BD /* [CP] Check Pods Manifest.lock */,
 				F622883124BD47F800288CE0 /* Sources */,
 				F622883224BD47F800288CE0 /* Frameworks */,
 				F622883324BD47F800288CE0 /* Resources */,
+				92A9F2160A99DE5BAA052D9A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -179,20 +254,73 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		6F4F5AF938C6C368A5A351BD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SwiftyPageViewController-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		92A9F2160A99DE5BAA052D9A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SwiftyPageViewController/Pods-SwiftyPageViewController-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SwiftyPageViewController/Pods-SwiftyPageViewController-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SwiftyPageViewController/Pods-SwiftyPageViewController-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		F622883124BD47F800288CE0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6D7CA9A24BED4BB005F0F2D /* MPMenuView.swift in Sources */,
 				F622885224BD4E8300288CE0 /* MPChildViewControllerProtocol.swift in Sources */,
 				F622886724BDAEEF00288CE0 /* MPIndicator.swift in Sources */,
 				F622883D24BD47F800288CE0 /* ViewController.swift in Sources */,
 				F622885C24BD500900288CE0 /* MPPageViewController.swift in Sources */,
+				F6D7CAAE24BEEF13005F0F2D /* BaseViewController.swift in Sources */,
 				F622885024BD4DB500288CE0 /* MPPageViewControllerProtocol.swift in Sources */,
+				F6D7CA9824BE989F005F0F2D /* MPMenuItemView.swift in Sources */,
 				F622886324BDAD7A00288CE0 /* MPBottomLineViewStyle.swift in Sources */,
+				F6D7CAAA24BEEBE0005F0F2D /* Page4ViewController.swift in Sources */,
+				F6D7CAA424BEEBC9005F0F2D /* Page1ViewController.swift in Sources */,
 				F622886024BDA52100288CE0 /* MPPageViewController+Additianal.swift in Sources */,
+				F6D7CAA624BEEBD4005F0F2D /* Page2ViewController.swift in Sources */,
+				F6D7CAA024BEE8F3005F0F2D /* Stype1ViewController.swift in Sources */,
+				F6D7CAAC24BEEBE7005F0F2D /* Page5ViewController.swift in Sources */,
 				F622885624BD4F3900288CE0 /* MPPageContainView.swift in Sources */,
+				F6D7CAA824BEEBDA005F0F2D /* Page3ViewController.swift in Sources */,
 				F622885A24BD4F7E00288CE0 /* UIScrollView+Additional.swift in Sources */,
+				F6D7CAA224BEE92E005F0F2D /* MPPageStype1ViewController.swift in Sources */,
+				F6D7CA9C24BEE607005F0F2D /* UIScrollView+MPMenuExtension.swift in Sources */,
 				F622885E24BD502500288CE0 /* NSCache+Additional.swift in Sources */,
 				F622885924BD4F7E00288CE0 /* UIViewController+Additional.swift in Sources */,
 				F622883924BD47F800288CE0 /* AppDelegate.swift in Sources */,
@@ -338,6 +466,7 @@
 		};
 		F622884A24BD47F900288CE0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3FBFCFDD484EBDBB7AE8AA06 /* Pods-SwiftyPageViewController.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -356,6 +485,7 @@
 		};
 		F622884B24BD47F900288CE0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 243F01D373BF769DF900B4E8 /* Pods-SwiftyPageViewController.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

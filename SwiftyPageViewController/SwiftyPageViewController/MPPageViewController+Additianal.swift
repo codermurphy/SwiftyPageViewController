@@ -22,12 +22,28 @@ extension MPPageViewController {
         var manualHandel = false
         if mainScrollView.contentOffset.y < sillValue {
             currentChildScrollView?.contentOffset = currentChildScrollView?.mp_originOffset ?? .zero
-            currentChildScrollView?.mp_isCanScroll = false
-            mainScrollView.mp_isCanScroll = true
-            manualHandel = true
+
+            if let _ = headerViewFor(self)  {
+                currentChildScrollView?.mp_isCanScroll = false
+                mainScrollView.mp_isCanScroll = true
+                manualHandel = true
+            }
+            else {
+                currentChildScrollView?.mp_isCanScroll = true
+                mainScrollView.mp_isCanScroll = false
+                manualHandel = false
+            }
+
         } else if mainScrollView.contentOffset.y == sillValue  {
-            mainScrollView.mp_isCanScroll = false
-            manualHandel = true
+            if let _ = headerViewFor(self) {
+                mainScrollView.mp_isCanScroll = false
+                manualHandel = true
+            }
+            else {
+                mainScrollView.mp_isCanScroll = true
+                manualHandel = false
+            }
+
         }
         let isAdsorption = (headerViewHeight <= 0.0) ? true : !mainScrollView.mp_isCanScroll
         if animated {
@@ -139,13 +155,26 @@ extension MPPageViewController: UIScrollViewDelegate {
 
 extension MPPageViewController {
     internal func childScrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        if scrollView.bounds.width < scrollView.contentSize.width {
-            if scrollView.mp_isCanScroll == false {
+        if let _ = headerViewFor(self) {
+            if scrollView.bounds.width < scrollView.contentSize.width {
+                if scrollView.mp_isCanScroll == false {
 
-                scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: 0)
+                    scrollView.contentOffset = CGPoint(x: scrollView.contentOffset.x, y: 0)
+                }
+                else {
+                    let offsetY = scrollView.contentOffset.y
+                    if offsetY <= (scrollView.mp_originOffset ?? .zero).y {
+                        scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
+                        scrollView.mp_isCanScroll = false
+                        mainScrollView.mp_isCanScroll = true
+                    }
+                }
             }
             else {
+                if scrollView.mp_isCanScroll == false {
+
+                    scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
+                }
                 let offsetY = scrollView.contentOffset.y
                 if offsetY <= (scrollView.mp_originOffset ?? .zero).y {
                     scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
@@ -155,16 +184,8 @@ extension MPPageViewController {
             }
         }
         else {
-            if scrollView.mp_isCanScroll == false {
-
-                scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
-            }
-            let offsetY = scrollView.contentOffset.y
-            if offsetY <= (scrollView.mp_originOffset ?? .zero).y {
-                scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
-                scrollView.mp_isCanScroll = false
-                mainScrollView.mp_isCanScroll = true
-            }
+            scrollView.mp_isCanScroll = true
+            mainScrollView.mp_isCanScroll = false
         }
         
 

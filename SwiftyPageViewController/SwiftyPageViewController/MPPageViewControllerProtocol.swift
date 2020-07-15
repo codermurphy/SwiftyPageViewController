@@ -12,7 +12,7 @@ protocol MPPageControllerDataSource: class {
     
     func pageController(_ pageController: MPPageViewController, viewControllerAt index: Int) -> (UIViewController & MPChildViewControllerProtocol)
     func numberOfViewControllers(in pageController: MPPageViewController) -> Int
-    func headerViewFor(_ pageController: MPPageViewController) -> UIView
+    func headerViewFor(_ pageController: MPPageViewController) -> UIView?
     func headerViewHeightFor(_ pageController: MPPageViewController) -> CGFloat
     func menuViewFor(_ pageController: MPPageViewController) -> UIView
     func menuViewHeightFor(_ pageController: MPPageViewController) -> CGFloat
