@@ -26,7 +26,7 @@ public class MPBottomLineViewStyle {
     
     public var height: CGFloat = 0.5 {
         didSet {
-            //targetView?.snp.updateConstraints({$0.height.equalTo(height)})
+            targetView?.snp.updateConstraints({$0.height.equalTo(height)})
         }
     }
     
@@ -39,7 +39,7 @@ public class MPBottomLineViewStyle {
     weak var targetView: UIView? {
         didSet {
             targetView?.backgroundColor = backgroundColor
-            //targetView?.snp.updateConstraints({$0.height.equalTo(height)})
+            targetView?.snp.updateConstraints({$0.height.equalTo(height)})
             targetView?.isHidden = hidden
         }
     }

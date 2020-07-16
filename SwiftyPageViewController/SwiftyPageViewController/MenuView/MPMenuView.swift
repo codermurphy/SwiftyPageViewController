@@ -40,6 +40,7 @@ public enum MPMenuLayoutStyle {
     case auto
 }
 
+
 public protocol MPMenuViewDelegate: class {
     func menuView(_ menuView: MPMenuView, didSelectedItemAt index: Int)
 }
@@ -49,7 +50,7 @@ public class MPMenuView: UIView {
     
     // MARK: - initial methods
     
-    public init(parts: MPMenuStyle...) {
+    public init(parts: [MPMenuStyle]) {
         super.init(frame: .zero)
         for part in parts {
             switch part {
@@ -115,11 +116,14 @@ public class MPMenuView: UIView {
                 return
             }
             
-            scrollView.snp.updateConstraints { (make) in
+            stackView.snp.updateConstraints { (make) in
+                /// 处理1pt的误差
+                //make.edges.equalToSuperview().inset(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -1))
                 make.leading.equalToSuperview().offset(contentInset.left)
-                make.trailing.equalToSuperview().offset(-contentInset.right)
+                make.trailing.equalToSuperview().offset(-contentInset.right + 1)
                 make.top.equalToSuperview().offset(contentInset.top)
                 make.bottom.equalToSuperview().offset(-contentInset.bottom)
+                make.height.equalToSuperview()
             }
         }
     }
@@ -164,10 +168,13 @@ public class MPMenuView: UIView {
                 let labelWidth = stackView.arrangedSubviews.first?.bounds.width ?? 0.0
                 if self.layoutStyle == .auto {
                     let totalWidth = stackView.arrangedSubviews.map { $0.bounds.width}.reduce(0) { $0 + $1}
-                    if totalWidth + CGFloat(self.titles.count) * self.itemSpace <= self.bounds.width - self.contentInset.left - self.contentInset.right {
-                        let diff = self.bounds.width - totalWidth -  self.contentInset.left - self.contentInset.right
+                    if totalWidth + CGFloat(self.titles.count - 1) * self.itemSpace <= self.bounds.width - self.contentInset.left - (self.contentInset.right != 0 ? self.contentInset.right : self.contentInset.left) {
+                        let diff = self.bounds.width - totalWidth -  self.contentInset.left - (self.contentInset.right != 0 ? self.contentInset.right : self.contentInset.left)
                         self.itemSpace = diff / CGFloat(titles.count - 1)
-                        debugPrint(diff)
+                        self.scrollView.isScrollEnabled = false
+                    }
+                    else {
+                        self.scrollView.isScrollEnabled = true
                     }
                 }
                 var progressWidth: CGFloat = 0
@@ -187,8 +194,31 @@ public class MPMenuView: UIView {
                 
                 let offset = stackView.arrangedSubviews.first?.frame.midX ?? 0.0
                 indicatorView.snp.updateConstraints { (make) in
-                    make.width.equalTo(progressWidth)
-                    make.centerX.equalTo(scrollView.snp.leading).offset(offset)
+                    switch indicatorViewStyle.shape {
+                    case let .line(isAutoWidth, width):
+                        if isAutoWidth {
+                            make.width.equalTo(progressWidth)
+                            make.centerX.equalTo(stackView.snp.leading).offset(offset)
+                        }
+                        else {
+                            make.width.equalTo(width)
+                            make.centerX.equalTo(stackView.snp.leading).offset(offset)
+                        }
+                    default:
+                        make.width.equalTo(progressWidth)
+                        make.centerX.equalTo(stackView.snp.leading).offset(offset)
+                    }
+
+                    let itemHeight = stackView.arrangedSubviews.first?.bounds.height ?? 0.0
+                    let diff = (self.bounds.height - itemHeight) * 0.5
+                    switch indicatorViewStyle.position {
+                    case .contentBottom(let offset):
+                        make.bottom.equalToSuperview().offset(-diff + offset)
+                    case .contentTop(let offset):
+                         make.top.equalToSuperview().offset(diff - offset)
+                    default:
+                        break
+                    }
                 }
                 checkState(animation: false)
             }
@@ -239,7 +269,13 @@ public class MPMenuView: UIView {
                     , currentIndex >= 0 else {
                     return
                 }
-                nextIndex = currentIndex == titles.count - 1 ? currentIndex - 1 : currentIndex + 1
+                
+                if titles.count == 1 {
+                    nextIndex = 0
+                }
+                else {
+                    nextIndex = currentIndex == titles.count - 1 ? currentIndex - 1 : currentIndex + 1
+                }
     //            nextIndex = min(currentIndex + 1, titles.count - 1)
                 currentItem = menuItemViews[currentIndex]
             }
@@ -249,7 +285,7 @@ public class MPMenuView: UIView {
         
 
     // MARK: - item click handle
-    
+        
     @objc private func itemClickedAction(button: UIButton) {
         guard let index = stackView.arrangedSubviews.firstIndex(of: button) else {
             return
@@ -263,29 +299,35 @@ public class MPMenuView: UIView {
         clipsToBounds = true
         addSubview(scrollView)
         scrollView.snp.makeConstraints { (make) in
-            make.leading.equalToSuperview().offset(contentInset.left)
-            make.trailing.equalToSuperview().offset(-contentInset.right)
-            make.top.equalToSuperview().offset(contentInset.top)
-            make.bottom.equalToSuperview().offset(-contentInset.bottom)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+            make.top.equalToSuperview()
+            make.bottom.equalToSuperview()
+
         }
         
         
         scrollView.addSubview(stackView)
         stackView.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview()
+            /// 处理1pt的误差
+            //make.edges.equalToSuperview().inset(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -1))
+            make.leading.equalToSuperview().offset(contentInset.left)
+            make.trailing.equalToSuperview().offset(-contentInset.right + 1)
+            make.top.equalToSuperview().offset(contentInset.top)
+            make.bottom.equalToSuperview().offset(-contentInset.bottom)
             make.height.equalToSuperview()
         }
         
         scrollView.addSubview(indicatorView)
         scrollView.sendSubviewToBack(indicatorView)
         indicatorView.snp.makeConstraints { (make) in
-            make.centerX.equalTo(scrollView.snp.leading).offset(0)
+            make.centerX.equalTo(stackView.snp.leading).offset(0)
             switch indicatorViewStyle.position {
-            case .bottom:
+            case .bottom,.contentBottom:
                 make.bottom.equalToSuperview()
             case .center:
                 make.centerY.equalToSuperview()
-            case .top:
+            case .top,.contentTop:
                 make.top.equalToSuperview()
             }
         }
@@ -345,29 +387,30 @@ public class MPMenuView: UIView {
         case .line:
             indicatorView.snp.updateConstraints { (make) in
                 switch indicatorViewStyle.shape {
-                case .line:
-                    make.width.equalTo(widthDifference * scrollRate + currentWidth + indicatorViewStyle.extraWidth)
+                case let .line(isAutoWidth,width):
+                    if isAutoWidth {
+                        make.width.equalTo(widthDifference * scrollRate + currentWidth + indicatorViewStyle.extraWidth)
+                    }
+                    else {
+                        make.width.equalTo(width)
+                    }
+                    
                 case .triangle:
                     make.width.equalTo(indicatorViewStyle.height + indicatorViewStyle.extraWidth)
                 case .round:
                     make.width.equalTo(indicatorViewStyle.height)
                 }
-                make.centerX.equalTo(scrollView.snp.leading).offset(leadingMargin + itemMidSpace * scrollRate)
+                make.centerX.equalTo(stackView.snp.leading).offset(leadingMargin + itemMidSpace * scrollRate)
             }
         case .telescopic:
             indicatorView.snp.updateConstraints { (make) in
                 let rate = (scrollRate <= 0.5 ? scrollRate : (1.0 - scrollRate)) * indicatorViewStyle.elasticValue
                 make.width.equalTo(max(centerXDifference * rate + indicatorViewStyle.originWidth, 0))
-                make.centerX.equalTo(scrollView.snp.leading).offset(leadingMargin + itemMidSpace * scrollRate)
+                make.centerX.equalTo(stackView.snp.leading).offset(leadingMargin + itemMidSpace * scrollRate)
             }
         }
     }
     
-    // MARK: - override methods
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-
-    }
 
     // MARK: - UI
     private lazy var stackView: UIStackView = {
@@ -378,12 +421,13 @@ public class MPMenuView: UIView {
         stackView.spacing = self.itemSpace
         return stackView
     }()
-    private lazy var scrollView: UIScrollView = {
+    private(set) lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
         scrollView.scrollsToTop = false
         scrollView.clipsToBounds = false
+        scrollView.delaysContentTouches = true
         return scrollView
     }()
     private lazy var indicatorView: UIView = {

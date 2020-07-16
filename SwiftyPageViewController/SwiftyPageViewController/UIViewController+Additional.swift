@@ -28,8 +28,8 @@ import UIKit
 
 extension UIViewController {
     
-    public var mp_pageViewContoller: MPPageViewController? {
-        return parent as? MPPageViewController
+    public var mp_pageViewContoller: MPPageBaseViewController? {
+        return parent as? MPPageBaseViewController
     }
     
     func mp_clearFromParent() {

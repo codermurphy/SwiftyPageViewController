@@ -8,34 +8,34 @@
 
 import UIKit
 
-class MPPageStype1ViewController: MPPageViewController {
+class MPPageStype1ViewController: MPPageBaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        
-        self.menuView.titles = [MPMenuModel(title: "page1"),MPMenuModel(title: "page2"),MPMenuModel(title: "page3"),MPMenuModel(title: "page4"),MPMenuModel(title: "page5")]
         self.menuView.contentInset = UIEdgeInsets(top: 0, left: 24, bottom: 0, right: 24)
+
+        self.menuView.titles = [MPMenuModel(title: "page1"),MPMenuModel(title: "page2"),MPMenuModel(title: "page3"),MPMenuModel(title: "page4"),MPMenuModel(title: "page5")]
     }
     
 
     // MARK: - UI
     lazy var menuView: MPMenuView = {
         let view = MPMenuView(parts:
-            .normalTextColor(UIColor.gray),
+            [.normalTextColor(UIColor.gray),
             .selectedTextColor(UIColor.blue),
             .normalTextFont(UIFont.systemFont(ofSize: 15.0)),
-            .selectedTextFont(UIFont.systemFont(ofSize: 15.0, weight: .medium)),
+            .selectedTextFont(UIFont.systemFont(ofSize: 15.0)),
             .switchStyle(.line),
+            .itemSpace(30),
             .indicatorStyle(
                 MPIndicatorViewStyle(parts:
                     .backgroundColor(.brown),
-                    .height(30.0),
-                    .cornerRadius(15),
-                    .position(.center),
-                    .extraWidth(15.0),
-                    .shape(.line)
+                    .height(3.0),
+                    .position(.contentBottom(offset: 0)),
+                    .extraWidth(0),
+                    .shape(.line(isAutoWidth: false, width: 15))
                 )
             ),
             .bottomLineStyle(
@@ -43,7 +43,7 @@ class MPPageStype1ViewController: MPPageViewController {
                     .hidden(false)
                 )
             ),
-            .layoutStyle(.auto)
+            .layoutStyle(.auto)]
         )
         view.delegate = self
         return view
@@ -52,7 +52,7 @@ class MPPageStype1ViewController: MPPageViewController {
     
     // MARK: - override methods
     
-    override func pageController(_ pageController: MPPageViewController, viewControllerAt index: Int) -> (UIViewController & MPChildViewControllerProtocol) {
+    override func pageController(_ pageController: MPPageBaseViewController, viewControllerAt index: Int) -> (UIViewController & MPChildViewControllerProtocol) {
         
         switch index {
         case 0:
@@ -71,35 +71,35 @@ class MPPageStype1ViewController: MPPageViewController {
         
     }
     
-    override func numberOfViewControllers(in pageController: MPPageViewController) -> Int {
+    override func numberOfViewControllers(in pageController: MPPageBaseViewController) -> Int {
         return 5
     }
     
-    override func headerViewFor(_ pageController: MPPageViewController) -> UIView? {
+    override func headerViewFor(_ pageController: MPPageBaseViewController) -> UIView? {
         return nil
     }
     
-    override func headerViewHeightFor(_ pageController: MPPageViewController) -> CGFloat {
+    override func headerViewHeightFor(_ pageController: MPPageBaseViewController) -> CGFloat {
         return 0
     }
     
-    override func menuViewFor(_ pageController: MPPageViewController) -> UIView {
+    override func menuViewFor(_ pageController: MPPageBaseViewController) -> UIView {
         return self.menuView
     }
     
-    override func menuViewHeightFor(_ pageController: MPPageViewController) -> CGFloat {
+    override func menuViewHeightFor(_ pageController: MPPageBaseViewController) -> CGFloat {
         return 50
     }
     
-    override func menuViewPinHeightFor(_ pageController: MPPageViewController) -> CGFloat {
+    override func menuViewPinHeightFor(_ pageController: MPPageBaseViewController) -> CGFloat {
         return 0.0
     }
     
-    override func pageController(_ pageController: MPPageViewController, contentScrollViewDidScroll scrollView: UIScrollView) {
+    override func pageController(_ pageController: MPPageBaseViewController, contentScrollViewDidScroll scrollView: UIScrollView) {
         menuView.updateLayout(scrollView)
     }
     
-    override func pageController(_ pageController: MPPageViewController, didDisplay viewController: (UIViewController & MPChildViewControllerProtocol), forItemAt index: Int) {
+    override func pageController(_ pageController: MPPageBaseViewController, didDisplay viewController: (UIViewController & MPChildViewControllerProtocol), forItemAt index: Int) {
         menuView.checkState(animation: true)
     }
 }

@@ -19,7 +19,7 @@
 		F622885624BD4F3900288CE0 /* MPPageContainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F622885524BD4F3900288CE0 /* MPPageContainView.swift */; };
 		F622885924BD4F7E00288CE0 /* UIViewController+Additional.swift in Sources */ = {isa = PBXBuildFile; fileRef = F622885724BD4F7E00288CE0 /* UIViewController+Additional.swift */; };
 		F622885A24BD4F7E00288CE0 /* UIScrollView+Additional.swift in Sources */ = {isa = PBXBuildFile; fileRef = F622885824BD4F7E00288CE0 /* UIScrollView+Additional.swift */; };
-		F622885C24BD500900288CE0 /* MPPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F622885B24BD500900288CE0 /* MPPageViewController.swift */; };
+		F622885C24BD500900288CE0 /* MPPageBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F622885B24BD500900288CE0 /* MPPageBaseViewController.swift */; };
 		F622885E24BD502500288CE0 /* NSCache+Additional.swift in Sources */ = {isa = PBXBuildFile; fileRef = F622885D24BD502500288CE0 /* NSCache+Additional.swift */; };
 		F622886024BDA52100288CE0 /* MPPageViewController+Additianal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F622885F24BDA52100288CE0 /* MPPageViewController+Additianal.swift */; };
 		F622886324BDAD7A00288CE0 /* MPBottomLineViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F622886224BDAD7A00288CE0 /* MPBottomLineViewStyle.swift */; };
@@ -35,6 +35,7 @@
 		F6D7CAAA24BEEBE0005F0F2D /* Page4ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CAA924BEEBE0005F0F2D /* Page4ViewController.swift */; };
 		F6D7CAAC24BEEBE7005F0F2D /* Page5ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CAAB24BEEBE7005F0F2D /* Page5ViewController.swift */; };
 		F6D7CAAE24BEEF13005F0F2D /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CAAD24BEEF13005F0F2D /* BaseViewController.swift */; };
+		F6E66BBE24C0330900F5E8A9 /* MPPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6E66BBD24C0330900F5E8A9 /* MPPageViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,7 +55,7 @@
 		F622885524BD4F3900288CE0 /* MPPageContainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPPageContainView.swift; sourceTree = "<group>"; };
 		F622885724BD4F7E00288CE0 /* UIViewController+Additional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Additional.swift"; sourceTree = "<group>"; };
 		F622885824BD4F7E00288CE0 /* UIScrollView+Additional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Additional.swift"; sourceTree = "<group>"; };
-		F622885B24BD500900288CE0 /* MPPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPPageViewController.swift; sourceTree = "<group>"; };
+		F622885B24BD500900288CE0 /* MPPageBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPPageBaseViewController.swift; sourceTree = "<group>"; };
 		F622885D24BD502500288CE0 /* NSCache+Additional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSCache+Additional.swift"; sourceTree = "<group>"; };
 		F622885F24BDA52100288CE0 /* MPPageViewController+Additianal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MPPageViewController+Additianal.swift"; sourceTree = "<group>"; };
 		F622886224BDAD7A00288CE0 /* MPBottomLineViewStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPBottomLineViewStyle.swift; sourceTree = "<group>"; };
@@ -70,6 +71,7 @@
 		F6D7CAA924BEEBE0005F0F2D /* Page4ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page4ViewController.swift; sourceTree = "<group>"; };
 		F6D7CAAB24BEEBE7005F0F2D /* Page5ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page5ViewController.swift; sourceTree = "<group>"; };
 		F6D7CAAD24BEEF13005F0F2D /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		F6E66BBD24C0330900F5E8A9 /* MPPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPPageViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,7 +142,8 @@
 				F622886124BDACD700288CE0 /* MenuView */,
 				F622884F24BD4DB500288CE0 /* MPPageViewControllerProtocol.swift */,
 				F622885124BD4E8300288CE0 /* MPChildViewControllerProtocol.swift */,
-				F622885B24BD500900288CE0 /* MPPageViewController.swift */,
+				F622885B24BD500900288CE0 /* MPPageBaseViewController.swift */,
+				F6E66BBD24C0330900F5E8A9 /* MPPageViewController.swift */,
 				F622885F24BDA52100288CE0 /* MPPageViewController+Additianal.swift */,
 				F622885324BD4EBD00288CE0 /* MPPageMainScrollView.swift */,
 				F622885524BD4F3900288CE0 /* MPPageContainView.swift */,
@@ -303,9 +306,10 @@
 			files = (
 				F6D7CA9A24BED4BB005F0F2D /* MPMenuView.swift in Sources */,
 				F622885224BD4E8300288CE0 /* MPChildViewControllerProtocol.swift in Sources */,
+				F6E66BBE24C0330900F5E8A9 /* MPPageViewController.swift in Sources */,
 				F622886724BDAEEF00288CE0 /* MPIndicator.swift in Sources */,
 				F622883D24BD47F800288CE0 /* ViewController.swift in Sources */,
-				F622885C24BD500900288CE0 /* MPPageViewController.swift in Sources */,
+				F622885C24BD500900288CE0 /* MPPageBaseViewController.swift in Sources */,
 				F6D7CAAE24BEEF13005F0F2D /* BaseViewController.swift in Sources */,
 				F622885024BD4DB500288CE0 /* MPPageViewControllerProtocol.swift in Sources */,
 				F6D7CA9824BE989F005F0F2D /* MPMenuItemView.swift in Sources */,

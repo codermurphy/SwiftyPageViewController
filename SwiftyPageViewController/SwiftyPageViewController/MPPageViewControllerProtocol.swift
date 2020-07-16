@@ -10,19 +10,19 @@ import UIKit
 
 protocol MPPageControllerDataSource: class {
     
-    func pageController(_ pageController: MPPageViewController, viewControllerAt index: Int) -> (UIViewController & MPChildViewControllerProtocol)
-    func numberOfViewControllers(in pageController: MPPageViewController) -> Int
-    func headerViewFor(_ pageController: MPPageViewController) -> UIView?
-    func headerViewHeightFor(_ pageController: MPPageViewController) -> CGFloat
-    func menuViewFor(_ pageController: MPPageViewController) -> UIView
-    func menuViewHeightFor(_ pageController: MPPageViewController) -> CGFloat
-    func menuViewPinHeightFor(_ pageController: MPPageViewController) -> CGFloat
+    func pageController(_ pageController: MPPageBaseViewController, viewControllerAt index: Int) -> (UIViewController & MPChildViewControllerProtocol)
+    func numberOfViewControllers(in pageController: MPPageBaseViewController) -> Int
+    func headerViewFor(_ pageController: MPPageBaseViewController) -> UIView?
+    func headerViewHeightFor(_ pageController: MPPageBaseViewController) -> CGFloat
+    func menuViewFor(_ pageController: MPPageBaseViewController) -> UIView
+    func menuViewHeightFor(_ pageController: MPPageBaseViewController) -> CGFloat
+    func menuViewPinHeightFor(_ pageController: MPPageBaseViewController) -> CGFloat
     
     /// The index of the controller displayed by default. You should have menview ready before setting this value
     ///
     /// - Parameter pageController: AquamanPageViewController
     /// - Returns: Int
-    func originIndexFor(_ pageController: MPPageViewController) -> Int
+    func originIndexFor(_ pageController: MPPageBaseViewController) -> Int
 }
 
 protocol MPPageControllerDelegate: class {
@@ -32,7 +32,7 @@ protocol MPPageControllerDelegate: class {
      /// - Parameters:
      ///   - pageController: AquamanPageViewController
      ///   - scrollView: mainScrollView
-     func pageController(_ pageController: MPPageViewController, mainScrollViewDidScroll scrollView: UIScrollView)
+     func pageController(_ pageController: MPPageBaseViewController, mainScrollViewDidScroll scrollView: UIScrollView)
     
      
      /// Method call when contentScrollView did end scroll
@@ -40,7 +40,7 @@ protocol MPPageControllerDelegate: class {
      /// - Parameters:
      ///   - pageController: AquamanPageViewController
      ///   - scrollView: contentScrollView
-     func pageController(_ pageController: MPPageViewController, contentScrollViewDidEndScroll scrollView: UIScrollView)
+     func pageController(_ pageController: MPPageBaseViewController, contentScrollViewDidEndScroll scrollView: UIScrollView)
      
      
      /// Any offset changes in pageController's contentScrollView
@@ -48,7 +48,7 @@ protocol MPPageControllerDelegate: class {
      /// - Parameters:
      ///   - pageController: AquamanPageViewController
      ///   - scrollView: contentScrollView
-     func pageController(_ pageController: MPPageViewController, contentScrollViewDidScroll scrollView: UIScrollView)
+     func pageController(_ pageController: MPPageBaseViewController, contentScrollViewDidScroll scrollView: UIScrollView)
      
      /// Method call when viewController will cache
      ///
@@ -56,7 +56,7 @@ protocol MPPageControllerDelegate: class {
      ///   - pageController: AquamanPageViewController
      ///   - viewController: target viewController
      ///   - index: target viewController's index
-     func pageController(_ pageController: MPPageViewController, willCache viewController: (UIViewController & MPChildViewControllerProtocol), forItemAt index: Int)
+     func pageController(_ pageController: MPPageBaseViewController, willCache viewController: (UIViewController & MPChildViewControllerProtocol), forItemAt index: Int)
      
      
      /// Method call when viewController will display
@@ -65,7 +65,7 @@ protocol MPPageControllerDelegate: class {
      ///   - pageController: AquamanPageViewController
      ///   - viewController: target viewController
      ///   - index: target viewController's index
-     func pageController(_ pageController: MPPageViewController, willDisplay viewController: (UIViewController & MPChildViewControllerProtocol), forItemAt index: Int)
+     func pageController(_ pageController: MPPageBaseViewController, willDisplay viewController: (UIViewController & MPChildViewControllerProtocol), forItemAt index: Int)
      
      
      /// Method call when viewController did display
@@ -74,7 +74,7 @@ protocol MPPageControllerDelegate: class {
      ///   - pageController: AquamanPageViewController
      ///   - viewController: target viewController
      ///   - index: target viewController's index
-     func pageController(_ pageController: MPPageViewController, didDisplay viewController: (UIViewController & MPChildViewControllerProtocol), forItemAt index: Int)
+     func pageController(_ pageController: MPPageBaseViewController, didDisplay viewController: (UIViewController & MPChildViewControllerProtocol), forItemAt index: Int)
      
      
      /// Method call when menuView is adsorption
@@ -82,11 +82,11 @@ protocol MPPageControllerDelegate: class {
      /// - Parameters:
      ///   - pageController: AquamanPageViewController
      ///   - isAdsorption: is adsorption
-     func pageController(_ pageController: MPPageViewController, menuView isAdsorption: Bool)
+     func pageController(_ pageController: MPPageBaseViewController, menuView isAdsorption: Bool)
      
      
      /// Asks the delegate for the margins to apply to content.
      /// - Parameter pageController: AquamanPageViewController
-     func contentInsetFor(_ pageController: MPPageViewController) -> UIEdgeInsets
+     func contentInsetFor(_ pageController: MPPageBaseViewController) -> UIEdgeInsets
 
 }

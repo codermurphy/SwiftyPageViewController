@@ -13,10 +13,13 @@ public enum MPIndicatorPosition {
     case top
     case center
     case bottom
+    case contentBottom(offset: CGFloat)
+    case contentTop(offset: CGFloat)
 }
 
 public enum MPIndicatorShape {
-    case line
+    /// 是否为自动宽度
+    case line(isAutoWidth: Bool,width: CGFloat)
     case triangle
     case round
 }
@@ -61,7 +64,7 @@ public class MPIndicatorViewStyle {
         }
     }
     
-    public var cornerRadius: CGFloat = 1.0 {
+    public var cornerRadius: CGFloat = 0.0 {
         didSet {
             switch shape {
             case .line:
@@ -73,7 +76,7 @@ public class MPIndicatorViewStyle {
     }
     
     var originWidth: CGFloat = 10.0
-    var shape = MPIndicatorShape.line
+    var shape = MPIndicatorShape.line(isAutoWidth: true, width: 0)
     var elasticValue: CGFloat = 1.6
     var extraWidth: CGFloat = 0.0
     var position = MPIndicatorPosition.bottom
@@ -101,6 +104,14 @@ public class MPIndicatorViewStyle {
                     trianglePath.addLine(to: CGPoint(x: (height + extraWidth), y: targetView.frame.minY))
                     trianglePath.addLine(to: CGPoint(x: (height + extraWidth) * 0.5, y: height))
                 case .bottom, .center:
+                    trianglePath.move(to: CGPoint(x: targetView.frame.minX, y: height))
+                    trianglePath.addLine(to: CGPoint(x: (height + extraWidth), y: height))
+                    trianglePath.addLine(to: CGPoint(x: (height + extraWidth) * 0.5, y: targetView.frame.minY))
+                case .contentTop:
+                    trianglePath.move(to: CGPoint(x: targetView.frame.minX, y: targetView.frame.minY))
+                    trianglePath.addLine(to: CGPoint(x: (height + extraWidth), y: targetView.frame.minY))
+                    trianglePath.addLine(to: CGPoint(x: (height + extraWidth) * 0.5, y: height))
+                case .contentBottom:
                     trianglePath.move(to: CGPoint(x: targetView.frame.minX, y: height))
                     trianglePath.addLine(to: CGPoint(x: (height + extraWidth), y: height))
                     trianglePath.addLine(to: CGPoint(x: (height + extraWidth) * 0.5, y: targetView.frame.minY))

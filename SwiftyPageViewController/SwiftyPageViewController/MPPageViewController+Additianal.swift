@@ -8,57 +8,50 @@
 
 import UIKit
 
-extension MPPageViewController {
+extension MPPageBaseViewController {
     public func updateHeaderViewHeight(animated: Bool = false,
                                        duration: TimeInterval = 0.25,
                                        completion: ((Bool) -> Void)? = nil) {
         
-        headerViewHeight = headerViewHeightFor(self)
-        sillValue = headerViewHeight - menuViewPinHeight
-        
-        mainScrollView.headerViewHeight = headerViewHeight
-        headerViewConstraint?.constant = headerViewHeight
-        
-        var manualHandel = false
-        if mainScrollView.contentOffset.y < sillValue {
-            currentChildScrollView?.contentOffset = currentChildScrollView?.mp_originOffset ?? .zero
-
-            if let _ = headerViewFor(self)  {
+        if let _ = headerViewFor(self) {
+            headerViewHeight = headerViewHeightFor(self)
+            sillValue = headerViewHeight - menuViewPinHeight
+                   
+            mainScrollView.headerViewHeight = headerViewHeight
+            headerViewConstraint?.constant = headerViewHeight
+                   
+            var manualHandel = false
+            if mainScrollView.contentOffset.y < sillValue {
+                currentChildScrollView?.contentOffset = currentChildScrollView?.mp_originOffset ?? .zero
                 currentChildScrollView?.mp_isCanScroll = false
                 mainScrollView.mp_isCanScroll = true
                 manualHandel = true
-            }
-            else {
-                currentChildScrollView?.mp_isCanScroll = true
-                mainScrollView.mp_isCanScroll = false
-                manualHandel = false
-            }
 
-        } else if mainScrollView.contentOffset.y == sillValue  {
-            if let _ = headerViewFor(self) {
+            } else if mainScrollView.contentOffset.y == sillValue  {
                 mainScrollView.mp_isCanScroll = false
                 manualHandel = true
-            }
-            else {
-                mainScrollView.mp_isCanScroll = true
-                manualHandel = false
-            }
 
-        }
-        let isAdsorption = (headerViewHeight <= 0.0) ? true : !mainScrollView.mp_isCanScroll
-        if animated {
-            UIView.animate(withDuration: duration, animations: {
-                self.mainScrollView.layoutIfNeeded()
-                if manualHandel {
-                    self.pageController(self, menuView: isAdsorption)
-                }
-            }) { (finish) in
-                completion?(finish)
             }
-        } else {
-            self.pageController(self, menuView: isAdsorption)
-            completion?(true)
+            let isAdsorption = (headerViewHeight <= 0.0) ? true : !mainScrollView.mp_isCanScroll
+            if animated {
+                UIView.animate(withDuration: duration, animations: {
+                    self.mainScrollView.layoutIfNeeded()
+                    if manualHandel {
+                        self.pageController(self, menuView: isAdsorption)
+                    }
+                }) { (finish) in
+                    completion?(finish)
+                }
+            } else {
+                self.pageController(self, menuView: isAdsorption)
+                completion?(true)
+            }
         }
+        else {
+            currentChildScrollView?.mp_isCanScroll = true
+            mainScrollView.mp_isCanScroll = false
+        }
+       
     }
     
     public func setSelect(index: Int, animation: Bool) {
@@ -87,7 +80,7 @@ extension MPPageViewController {
     }
 }
 
-extension MPPageViewController: UIScrollViewDelegate {
+extension MPPageBaseViewController: UIScrollViewDelegate {
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
@@ -153,9 +146,9 @@ extension MPPageViewController: UIScrollViewDelegate {
     
 }
 
-extension MPPageViewController {
+extension MPPageBaseViewController {
     internal func childScrollViewDidScroll(_ scrollView: UIScrollView) {
-        if let _ = headerViewFor(self) {
+        if let header = headerViewFor(self) {
             if scrollView.bounds.width < scrollView.contentSize.width {
                 if scrollView.mp_isCanScroll == false {
 
@@ -171,15 +164,17 @@ extension MPPageViewController {
                 }
             }
             else {
-                if scrollView.mp_isCanScroll == false {
+                if header.frame.height != self.menuViewPinHeight {
+                    if scrollView.mp_isCanScroll == false {
 
-                    scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
-                }
-                let offsetY = scrollView.contentOffset.y
-                if offsetY <= (scrollView.mp_originOffset ?? .zero).y {
-                    scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
-                    scrollView.mp_isCanScroll = false
-                    mainScrollView.mp_isCanScroll = true
+                        scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
+                    }
+                    let offsetY = scrollView.contentOffset.y
+                    if offsetY <= (scrollView.mp_originOffset ?? .zero).y {
+                        scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
+                        scrollView.mp_isCanScroll = false
+                        mainScrollView.mp_isCanScroll = true
+                    }
                 }
             }
         }
