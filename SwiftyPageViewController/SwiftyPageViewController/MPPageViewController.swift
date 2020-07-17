@@ -11,6 +11,7 @@ import UIKit
 public enum MPMenuRefreshPosition {
     
     case headerTop /// 当有headerView时
+    case menuTop
     case menuBottom
     
 }
@@ -22,6 +23,7 @@ public class MPPageViewController: MPPageBaseViewController {
                 menuContents: [MPMenuModel],
                 controllers: [UIViewController & MPChildViewControllerProtocol],
                 headerView: UIView? = nil,
+                refreshPosition: MPMenuRefreshPosition = .menuBottom,
                 menuViewHeight: CGFloat,
                 defaultMenuPinHeight: CGFloat,
                 defaultIndex: Int = 0) {
@@ -32,7 +34,31 @@ public class MPPageViewController: MPPageBaseViewController {
         self.menuViewHeight = menuViewHeight
         self.defaultMenuPinHeight = defaultMenuPinHeight
         self.defaultIndex = defaultIndex
+        self.refreshPosition = refreshPosition
         super.init(nibName: nil, bundle: nil)
+        
+        if headerView == nil {
+            if refreshPosition == .headerTop { self.refreshPosition = .menuTop}
+            switch self.refreshPosition {
+            case .menuBottom:
+                self.mainScrollView.alwaysBounceVertical = false
+            case .menuTop:
+                self.mainScrollView.alwaysBounceVertical = true
+            default:
+                break
+            }
+        }
+        else {
+            if refreshPosition == .menuTop { self.refreshPosition = .headerTop}
+            switch self.refreshPosition {
+            case .menuBottom:
+                self.mainScrollView.alwaysBounceVertical = false
+            case .headerTop:
+                self.mainScrollView.alwaysBounceVertical = true
+            default:
+                break
+            }
+        }
     }
     
     public required init?(coder aDecoder: NSCoder) {
@@ -46,7 +72,7 @@ public class MPPageViewController: MPPageBaseViewController {
         
         self.menuView.titles = self.menuContents
     }
-    
+        
     // MARK: - property
     private var menuContents: [MPMenuModel]
     
@@ -62,9 +88,9 @@ public class MPPageViewController: MPPageBaseViewController {
     
     private var defaultIndex: Int = 0
     
-    private var refreshPosition: MPMenuRefreshPosition = .menuBottom
-    
-    private lazy var menuView: MPMenuView = {
+    private(set) var refreshPosition: MPMenuRefreshPosition = .menuBottom
+        
+    private(set) lazy var menuView: MPMenuView = {
         let menu = MPMenuView(parts: self.configs)
         if let popGesture = navigationController?.interactivePopGestureRecognizer {
             menu.scrollView.panGestureRecognizer.require(toFail: popGesture)
@@ -106,13 +132,7 @@ public class MPPageViewController: MPPageBaseViewController {
     }
     
     public override func menuViewPinHeightFor(_ pageController: MPPageBaseViewController) -> CGFloat {
-        switch self.refreshPosition {
-        case .headerTop:
-            return 0
-        case .menuBottom:
-            return self.headerView?.frame.height ?? 0
-            
-        }
+        return 0
     }
     
     public override func pageController(_ pageController: MPPageBaseViewController, mainScrollViewDidScroll scrollView: UIScrollView) {

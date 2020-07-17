@@ -112,7 +112,7 @@ open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource
         currentViewController = containView.viewController
         currentChildScrollView = currentViewController?.mp_ChildScrollView()
         currentIndex = index
-        
+
         childScrollViewObservation?.invalidate()
         let keyValueObservation = currentChildScrollView?.observe(\.contentOffset, options: [.new, .old], changeHandler: { [weak self] (scrollView, change) in
             guard let self = self, change.newValue != change.oldValue else {
@@ -121,7 +121,7 @@ open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource
             self.childScrollViewDidScroll(scrollView)
         })
         childScrollViewObservation = keyValueObservation
-        
+
         if let viewController = containView.viewController {
             pageController(self, didDisplay: viewController, forItemAt: index)
         }

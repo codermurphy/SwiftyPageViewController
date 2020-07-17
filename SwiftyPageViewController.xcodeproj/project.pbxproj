@@ -27,8 +27,6 @@
 		F6D7CA9824BE989F005F0F2D /* MPMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CA9724BE989F005F0F2D /* MPMenuItemView.swift */; };
 		F6D7CA9A24BED4BB005F0F2D /* MPMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CA9924BED4BB005F0F2D /* MPMenuView.swift */; };
 		F6D7CA9C24BEE607005F0F2D /* UIScrollView+MPMenuExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CA9B24BEE607005F0F2D /* UIScrollView+MPMenuExtension.swift */; };
-		F6D7CAA024BEE8F3005F0F2D /* Stype1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CA9F24BEE8F3005F0F2D /* Stype1ViewController.swift */; };
-		F6D7CAA224BEE92E005F0F2D /* MPPageStype1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CAA124BEE92E005F0F2D /* MPPageStype1ViewController.swift */; };
 		F6D7CAA424BEEBC9005F0F2D /* Page1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CAA324BEEBC9005F0F2D /* Page1ViewController.swift */; };
 		F6D7CAA624BEEBD4005F0F2D /* Page2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CAA524BEEBD4005F0F2D /* Page2ViewController.swift */; };
 		F6D7CAA824BEEBDA005F0F2D /* Page3ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6D7CAA724BEEBDA005F0F2D /* Page3ViewController.swift */; };
@@ -63,8 +61,6 @@
 		F6D7CA9724BE989F005F0F2D /* MPMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPMenuItemView.swift; sourceTree = "<group>"; };
 		F6D7CA9924BED4BB005F0F2D /* MPMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPMenuView.swift; sourceTree = "<group>"; };
 		F6D7CA9B24BEE607005F0F2D /* UIScrollView+MPMenuExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+MPMenuExtension.swift"; sourceTree = "<group>"; };
-		F6D7CA9F24BEE8F3005F0F2D /* Stype1ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stype1ViewController.swift; sourceTree = "<group>"; };
-		F6D7CAA124BEE92E005F0F2D /* MPPageStype1ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPPageStype1ViewController.swift; sourceTree = "<group>"; };
 		F6D7CAA324BEEBC9005F0F2D /* Page1ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page1ViewController.swift; sourceTree = "<group>"; };
 		F6D7CAA524BEEBD4005F0F2D /* Page2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page2ViewController.swift; sourceTree = "<group>"; };
 		F6D7CAA724BEEBDA005F0F2D /* Page3ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page3ViewController.swift; sourceTree = "<group>"; };
@@ -143,8 +139,8 @@
 				F622884F24BD4DB500288CE0 /* MPPageViewControllerProtocol.swift */,
 				F622885124BD4E8300288CE0 /* MPChildViewControllerProtocol.swift */,
 				F622885B24BD500900288CE0 /* MPPageBaseViewController.swift */,
-				F6E66BBD24C0330900F5E8A9 /* MPPageViewController.swift */,
 				F622885F24BDA52100288CE0 /* MPPageViewController+Additianal.swift */,
+				F6E66BBD24C0330900F5E8A9 /* MPPageViewController.swift */,
 				F622885324BD4EBD00288CE0 /* MPPageMainScrollView.swift */,
 				F622885524BD4F3900288CE0 /* MPPageContainView.swift */,
 				F622885D24BD502500288CE0 /* NSCache+Additional.swift */,
@@ -175,18 +171,8 @@
 				F6D7CAA724BEEBDA005F0F2D /* Page3ViewController.swift */,
 				F6D7CAA924BEEBE0005F0F2D /* Page4ViewController.swift */,
 				F6D7CAAB24BEEBE7005F0F2D /* Page5ViewController.swift */,
-				F6D7CA9E24BEE8A9005F0F2D /* style1 */,
 			);
 			path = Example;
-			sourceTree = "<group>";
-		};
-		F6D7CA9E24BEE8A9005F0F2D /* style1 */ = {
-			isa = PBXGroup;
-			children = (
-				F6D7CA9F24BEE8F3005F0F2D /* Stype1ViewController.swift */,
-				F6D7CAA124BEE92E005F0F2D /* MPPageStype1ViewController.swift */,
-			);
-			path = style1;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -318,12 +304,10 @@
 				F6D7CAA424BEEBC9005F0F2D /* Page1ViewController.swift in Sources */,
 				F622886024BDA52100288CE0 /* MPPageViewController+Additianal.swift in Sources */,
 				F6D7CAA624BEEBD4005F0F2D /* Page2ViewController.swift in Sources */,
-				F6D7CAA024BEE8F3005F0F2D /* Stype1ViewController.swift in Sources */,
 				F6D7CAAC24BEEBE7005F0F2D /* Page5ViewController.swift in Sources */,
 				F622885624BD4F3900288CE0 /* MPPageContainView.swift in Sources */,
 				F6D7CAA824BEEBDA005F0F2D /* Page3ViewController.swift in Sources */,
 				F622885A24BD4F7E00288CE0 /* UIScrollView+Additional.swift in Sources */,
-				F6D7CAA224BEE92E005F0F2D /* MPPageStype1ViewController.swift in Sources */,
 				F6D7CA9C24BEE607005F0F2D /* UIScrollView+MPMenuExtension.swift in Sources */,
 				F622885E24BD502500288CE0 /* NSCache+Additional.swift in Sources */,
 				F622885924BD4F7E00288CE0 /* UIViewController+Additional.swift in Sources */,

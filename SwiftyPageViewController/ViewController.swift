@@ -21,7 +21,7 @@ class ViewController: UIViewController {
         self.contentView.delegate = self
     }
     
-    private let styles: [String] = ["stype1","stype2","stype3"]
+    private let styles: [String] = ["noheader-refereshMenuTop","noheader-refereshMenuBottom","header-refreshHeaderTop","header-refreshHeaderMenuBottom"]
 
 }
 
@@ -45,12 +45,12 @@ extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let count = Int.random(in: 0...10)
         var controllers: [UIViewController & MPChildViewControllerProtocol] = []
-        for _ in 0..<2 {
+        for _ in 0..<count {
             controllers.append(Page1ViewController())
         }
         
         var menus: [MPMenuModel] = []
-        for index in 0..<2 {
+        for index in 0..<count{
             var item = MPMenuModel()
             item.title = "menu\(index)"
             menus.append(item)
@@ -65,7 +65,23 @@ extension ViewController: UITableViewDelegate {
         
         switch indexPath.row {
         case 0:
-            let next = MPPageStype1ViewController()
+            let indicatorBackgroundColor: MPIndicatorStyle = .backgroundColor(.brown)
+            let indicatorHeight: MPIndicatorStyle = .height(3)
+            let indicatrIsHidden: MPIndicatorStyle = .hidden(false)
+            let indicatorCornor: MPIndicatorStyle = .cornerRadius(1.5)
+            let indicatorPosition: MPIndicatorStyle = .position(.bottom)
+            let indicatorShape: MPIndicatorStyle = .shape(.line(isAutoWidth: true, width: 0))
+            
+            let indicatorStyle: MPMenuStyle = .indicatorStyle(MPIndicatorViewStyle(parts: indicatorBackgroundColor,indicatorHeight,indicatrIsHidden,indicatorCornor,indicatorPosition,indicatorShape))
+            
+            let bottomLineStyle: MPMenuStyle = .bottomLineStyle(MPBottomLineViewStyle(parts: .backgroundColor(.red),.height(1),.hidden(false)))
+                
+            let switchStyle: MPMenuStyle = .switchStyle(.line)
+            let layoutStyle: MPMenuStyle = .layoutStyle(.auto)
+                
+            let configs = [normalTextFont,selectedTextFont,normalTextColor,selectedTextColor,itemSpace,contentInset,indicatorStyle,bottomLineStyle,switchStyle,layoutStyle]
+            
+            let next = MPPageViewController(configs: configs, menuContents: menus, controllers: controllers,refreshPosition: .menuTop ,menuViewHeight: 40, defaultMenuPinHeight: 0, defaultIndex: 0)
             self.navigationController?.pushViewController(next, animated: true)
         case 1:
 
@@ -85,7 +101,7 @@ extension ViewController: UITableViewDelegate {
             
             let configs = [normalTextFont,selectedTextFont,normalTextColor,selectedTextColor,itemSpace,contentInset,indicatorStyle,bottomLineStyle,switchStyle,layoutStyle]
         
-            let next = MPPageViewController(configs: configs, menuContents: menus, controllers: controllers ,menuViewHeight: 40, defaultMenuPinHeight: 0, defaultIndex: 0)
+            let next = MPPageViewController(configs: configs, menuContents: menus, controllers: controllers ,refreshPosition: .menuBottom,menuViewHeight: 40, defaultMenuPinHeight: 0, defaultIndex: 0)
             self.navigationController?.pushViewController(next, animated: true)
         case 2:
             let indicatorBackgroundColor: MPIndicatorStyle = .backgroundColor(.brown)
@@ -108,9 +124,31 @@ extension ViewController: UITableViewDelegate {
             headerView.frame.size.height = 120
             headerView.backgroundColor = .green
             
-            let next = MPPageViewController(configs: configs, menuContents: menus, controllers: controllers ,headerView:headerView ,menuViewHeight: 40, defaultMenuPinHeight: 0, defaultIndex: 0)
+            let next = MPPageViewController(configs: configs, menuContents: menus, controllers: controllers,headerView:headerView,refreshPosition: .headerTop,menuViewHeight: 40, defaultMenuPinHeight: 0, defaultIndex: 0)
             self.navigationController?.pushViewController(next, animated: true)
+        case 3:
+            let indicatorBackgroundColor: MPIndicatorStyle = .backgroundColor(.brown)
+            let indicatorHeight: MPIndicatorStyle = .height(3)
+            let indicatrIsHidden: MPIndicatorStyle = .hidden(false)
+            let indicatorCornor: MPIndicatorStyle = .cornerRadius(1.5)
+            let indicatorPosition: MPIndicatorStyle = .position(.bottom)
+            let indicatorShape: MPIndicatorStyle = .shape(.line(isAutoWidth: true, width: 0))
+                
+            let indicatorStyle: MPMenuStyle = .indicatorStyle(MPIndicatorViewStyle(parts: indicatorBackgroundColor,indicatorHeight,indicatrIsHidden,indicatorCornor,indicatorPosition,indicatorShape))
+                
+            let bottomLineStyle: MPMenuStyle = .bottomLineStyle(MPBottomLineViewStyle(parts: .backgroundColor(.red),.height(1),.hidden(false)))
+                
+            let switchStyle: MPMenuStyle = .switchStyle(.line)
+            let layoutStyle: MPMenuStyle = .layoutStyle(.flex)
+                
+            let configs = [normalTextFont,selectedTextFont,normalTextColor,selectedTextColor,itemSpace,contentInset,indicatorStyle,bottomLineStyle,switchStyle,layoutStyle]
             
+            let headerView = UIView()
+            headerView.frame.size.height = 120
+            headerView.backgroundColor = .green
+            
+            let next = MPPageViewController(configs: configs, menuContents: menus, controllers: controllers ,headerView:headerView ,refreshPosition: .menuBottom,menuViewHeight: 40, defaultMenuPinHeight: 0, defaultIndex: 0)
+            self.navigationController?.pushViewController(next, animated: true)
         default:
             break
         }
