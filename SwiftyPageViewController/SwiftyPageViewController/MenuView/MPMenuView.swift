@@ -28,6 +28,7 @@ public enum MPMenuStyle {
     case bottomLineStyle(MPBottomLineViewStyle)
     case switchStyle(MPMenuSwitchStyle)
     case layoutStyle(MPMenuLayoutStyle)
+    case itemTextAndImageStyle(MPMenuItemTextAndImageType,CGFloat)
 }
 
 public enum MPMenuSwitchStyle {
@@ -40,6 +41,11 @@ public enum MPMenuLayoutStyle {
     case auto
 }
 
+public enum MPMenuExtraViewPostion {
+    case left(width: CGFloat)
+    case right(width: CGFloat)
+}
+
 
 public protocol MPMenuViewDelegate: class {
     func menuView(_ menuView: MPMenuView, didSelectedItemAt index: Int)
@@ -50,7 +56,7 @@ public class MPMenuView: UIView {
     
     // MARK: - initial methods
     
-    public init(parts: [MPMenuStyle]) {
+    public init(parts: [MPMenuStyle],extraView: UIView? = nil,extraPosition: MPMenuExtraViewPostion = .right(width: 40)) {
         super.init(frame: .zero)
         for part in parts {
             switch part {
@@ -76,8 +82,13 @@ public class MPMenuView: UIView {
                 bottomLineViewStyle.targetView = bottomLineView
             case .layoutStyle(let style):
                 layoutStyle = style
+            case .itemTextAndImageStyle(let type, let spcaing):
+                self.itemTextAndImageType = type
+                self.itemTextAndImageSpacing = spcaing
             }
         }
+        self.extraView = extraView
+        self.extraViewPosition = extraPosition
         initialize()
     }
     
@@ -98,6 +109,9 @@ public class MPMenuView: UIView {
     
     private var normalTextFont = UIFont.systemFont(ofSize: 15)
     private var selectedTextFont = UIFont.systemFont(ofSize: 15)
+    
+    weak var extraView: UIView?
+    private var extraViewPosition: MPMenuExtraViewPostion = .right(width: 40)
     
     public var itemSpace:CGFloat = 30.0 {
         didSet {
@@ -131,6 +145,8 @@ public class MPMenuView: UIView {
     public private(set) lazy var bottomLineViewStyle = MPBottomLineViewStyle(view: bottomLineView)
     private var switchStyle = MPMenuSwitchStyle.line
     private var layoutStyle = MPMenuLayoutStyle.flex
+    private var itemTextAndImageType = MPMenuItemTextAndImageType.default
+    private var itemTextAndImageSpacing: CGFloat = 5
     
     private var scrollRate: CGFloat = 0.0 {
             didSet {
@@ -156,7 +172,9 @@ public class MPMenuView: UIView {
                                     normalIcon: item.normalIcon,
                                     selectedIcon: item.selectedIcon,
                                     normalIconUrl: item.normalUrl,
-                                    selectedIconUrl: item.selectedUrl)
+                                    selectedIconUrl: item.selectedUrl,
+                                    TextAndImageType: self.itemTextAndImageType,
+                                    textAndImageSpacing: self.itemTextAndImageSpacing)
                     menuItem.addTarget(self, action: #selector(itemClickedAction(button:)), for: .touchUpInside)
                     stackView.addArrangedSubview(menuItem)
                     menuItemViews.append(menuItem)
@@ -297,12 +315,42 @@ public class MPMenuView: UIView {
     private func initialize() {
         backgroundColor = .white
         clipsToBounds = true
+        
+        if let nonilView = extraView {
+            
+            self.addSubview(nonilView)
+            nonilView.snp.makeConstraints { (make) in
+                make.bottom.top.equalToSuperview()
+                switch self.extraViewPosition {
+                case let .left(width):
+                    make.leading.equalToSuperview()
+                    make.width.equalTo(width)
+                case let .right(width):
+                    make.trailing.equalToSuperview()
+                    make.width.equalTo(width)
+                }
+            }
+        }
+        
         addSubview(scrollView)
         scrollView.snp.makeConstraints { (make) in
-            make.leading.equalToSuperview()
-            make.trailing.equalToSuperview()
             make.top.equalToSuperview()
             make.bottom.equalToSuperview()
+            if let nonilView = self.extraView {
+                switch self.extraViewPosition {
+                case .left:
+                    make.leading.equalTo(nonilView.snp.trailing)
+                    make.trailing.equalToSuperview()
+                case .right:
+                    make.leading.equalToSuperview()
+                    make.trailing.equalTo(nonilView.snp.leading)
+                }
+            }
+            else {
+                make.leading.equalToSuperview()
+                make.trailing.equalToSuperview()
+
+            }
 
         }
         
@@ -337,6 +385,8 @@ public class MPMenuView: UIView {
             make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
         }
+     
+        if let nonilView = extraView { self.bringSubviewToFront(nonilView) }
         
     }
     

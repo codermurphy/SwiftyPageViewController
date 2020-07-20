@@ -9,11 +9,59 @@
 import UIKit
 
 open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource, MPPageControllerDelegate {
+    
+    // MARK: - menu所在位置
+    public enum MenuPosition {
+        case normal
+        case navigation(position: MenuPostionNavigation,width: CGFloat)
+    }
+    
+    public enum MenuPostionNavigation {
+        case left
+        case center
+        case right
+    }
 
+    /// 当前controller
     public private(set) var currentViewController: (UIViewController & MPChildViewControllerProtocol)?
+    
+    /// 当前所在index
     public private(set) var currentIndex = 0
     internal var originIndex = 0
+    
+    private var contentScrollViewConstraint: NSLayoutConstraint?
+    private var menuViewConstraint: NSLayoutConstraint?
+    internal var headerViewConstraint: NSLayoutConstraint?
+    private var mainScrollViewConstraints: [NSLayoutConstraint] = []
+    
+    internal var headerViewHeight: CGFloat = 0.0
+    internal lazy var headerContentView = UIView()
+    private let menuContentView: MPPageNavigationItemContainer = {
+        let menu = MPPageNavigationItemContainer()
+        menu.backgroundColor = .clear
+        return menu
+    }()
+    private var menuViewHeight: CGFloat = 0.0
+    internal var menuViewPinHeight: CGFloat = 0.0
+    internal var sillValue: CGFloat = 0.0
+    private var childControllerCount = 0
+    private var countArray = [Int]()
+    private var containViews = [MPPageContainView]()
+    internal var currentChildScrollView: UIScrollView?
+    private var childScrollViewObservation: NSKeyValueObservation?
+    
+    private let memoryCache = NSCache<NSString, UIViewController>()
+    private weak var dataSource: MPPageControllerDataSource?
+    private weak var delegate: MPPageControllerDelegate?
+    
+    internal var menuPosition: MenuPosition = .normal
+    
+    
+    open override var shouldAutomaticallyForwardAppearanceMethods: Bool {
+        return false
+    }
 
+    // MARK: - UI
     lazy public private(set) var mainScrollView: MPPageMainScrollView = {
         let scrollView = MPPageMainScrollView()
         scrollView.delegate = self
@@ -45,35 +93,14 @@ open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource
         return stackView
     }()
 
-    private var contentScrollViewConstraint: NSLayoutConstraint?
-    private var menuViewConstraint: NSLayoutConstraint?
-    internal var headerViewConstraint: NSLayoutConstraint?
-    private var mainScrollViewConstraints: [NSLayoutConstraint] = []
+
     
-    internal var headerViewHeight: CGFloat = 0.0
-    private let headerContentView = UIView()
-    private let menuContentView = UIView()
-    private var menuViewHeight: CGFloat = 0.0
-    internal var menuViewPinHeight: CGFloat = 0.0
-    internal var sillValue: CGFloat = 0.0
-    private var childControllerCount = 0
-    private var countArray = [Int]()
-    private var containViews = [MPPageContainView]()
-    internal var currentChildScrollView: UIScrollView?
-    private var childScrollViewObservation: NSKeyValueObservation?
-    
-    private let memoryCache = NSCache<NSString, UIViewController>()
-    private weak var dataSource: MPPageControllerDataSource?
-    private weak var delegate: MPPageControllerDelegate?
-    
-    open override var shouldAutomaticallyForwardAppearanceMethods: Bool {
-        return false
-    }
-    
+    // MARK: - initial methods
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         dataSource = self
         delegate = self
+        
     }
     
     public required init?(coder aDecoder: NSCoder) {
@@ -82,8 +109,17 @@ open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource
         delegate = self
     }
     
+    // MARK: - life cycle
     open override func viewDidLoad() {
         super.viewDidLoad()
+        
+        switch self.menuPosition {
+        case .navigation:
+            if self.navigationController == nil { self.menuPosition = . normal }
+        default:
+            break
+        }
+        
         
         obtainDataSource()
         setupOriginContent()
@@ -101,6 +137,7 @@ open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource
         childScrollViewObservation?.invalidate()
     }
     
+    // MARK: - methods
     internal func didDisplayViewController(at index: Int) {
         guard childControllerCount > 0
             , index >= 0
@@ -163,45 +200,81 @@ open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource
         mainScrollViewConstraints = constraints
         NSLayoutConstraint.activate(constraints)
         
+        if let _ = headerViewFor(self) {
+            mainScrollView.addSubview(headerContentView)
+            headerContentView.translatesAutoresizingMaskIntoConstraints = false
+            
+            let headerContentViewHeight = headerContentView.heightAnchor.constraint(equalToConstant: headerViewHeight)
+            headerContentViewHeight.priority = .defaultHigh
+            
+            let headerContentViewTop = headerContentView.topAnchor.constraint(equalTo: mainScrollView.topAnchor)
+            headerContentViewTop.priority = .defaultHigh
+            
+            headerViewConstraint = headerContentViewHeight
+            NSLayoutConstraint.activate([
+                headerContentView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
+                headerContentView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
+                headerContentViewTop,
+                headerContentViewHeight,
+            ])
+        }
+
         
-        mainScrollView.addSubview(headerContentView)
-        headerContentView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let headerContentViewHeight = headerContentView.heightAnchor.constraint(equalToConstant: headerViewHeight)
-        headerViewConstraint = headerContentViewHeight
-        NSLayoutConstraint.activate([
-            headerContentView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
-            headerContentView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
-            headerContentView.topAnchor.constraint(equalTo: mainScrollView.topAnchor),
-            headerContentViewHeight,
-        ])
-        
-        mainScrollView.addSubview(menuContentView)
-        menuContentView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let menuContentViewHeight = menuContentView.heightAnchor.constraint(equalToConstant: menuViewHeight)
-        menuViewConstraint = menuContentViewHeight
-        NSLayoutConstraint.activate([
-            menuContentView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
-            menuContentView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
-            menuContentView.widthAnchor.constraint(equalTo: mainScrollView.widthAnchor),
-            menuContentView.topAnchor.constraint(equalTo: headerContentView.bottomAnchor),
-            menuContentViewHeight
-        ])
-        
+        switch self.menuPosition {
+        case .normal:
+            mainScrollView.addSubview(menuContentView)
+            menuContentView.translatesAutoresizingMaskIntoConstraints = false
+            
+            let menuContentViewHeight = menuContentView.heightAnchor.constraint(equalToConstant: menuViewHeight)
+            menuViewConstraint = menuContentViewHeight
+            NSLayoutConstraint.activate([
+                menuContentView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
+                menuContentView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
+                menuContentView.widthAnchor.constraint(equalTo: mainScrollView.widthAnchor),
+                menuContentView.topAnchor.constraint(equalTo: headerViewFor(self) ==  nil ? mainScrollView.topAnchor :headerContentView.bottomAnchor),
+                menuContentViewHeight
+            ])
+        case let .navigation(position, width):
+            menuContentView.frame.size = CGSize(width: width, height: 44)
+            switch position {
+            case .center:
+                self.navigationItem.titleView = menuContentView
+            case .left:
+                self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: menuContentView)
+            case .right:
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: menuContentView)
+            }
+            break
+        }
+
         
         mainScrollView.addSubview(contentScrollView)
         
         let contentScrollViewHeight = contentScrollView.heightAnchor.constraint(equalTo: mainScrollView.heightAnchor, constant: -menuViewHeight - menuViewPinHeight)
         contentScrollViewConstraint = contentScrollViewHeight
-        NSLayoutConstraint.activate([
-            contentScrollView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
-            contentScrollView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
-            contentScrollView.bottomAnchor.constraint(equalTo: mainScrollView.bottomAnchor),
-            contentScrollView.widthAnchor.constraint(equalTo: mainScrollView.widthAnchor),
-            contentScrollView.topAnchor.constraint(equalTo: menuContentView.bottomAnchor),
-            contentScrollViewHeight
-            ])
+        
+        switch self.menuPosition {
+        case .normal:
+            NSLayoutConstraint.activate([
+                contentScrollView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
+                contentScrollView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
+                contentScrollView.bottomAnchor.constraint(equalTo: mainScrollView.bottomAnchor),
+                contentScrollView.widthAnchor.constraint(equalTo: mainScrollView.widthAnchor),
+                contentScrollView.topAnchor.constraint(equalTo: menuContentView.bottomAnchor),
+                contentScrollViewHeight
+                ])
+        case .navigation:
+            NSLayoutConstraint.activate([
+                contentScrollView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
+                contentScrollView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
+                contentScrollView.bottomAnchor.constraint(equalTo: mainScrollView.bottomAnchor),
+                contentScrollView.widthAnchor.constraint(equalTo: mainScrollView.widthAnchor),
+                contentScrollView.topAnchor.constraint(equalTo: mainScrollView.topAnchor),
+                contentScrollViewHeight
+                ])
+        }
+        
+
         
         
         contentScrollView.addSubview(contentStackView)
@@ -214,8 +287,15 @@ open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource
             contentStackView.heightAnchor.constraint(equalTo: contentScrollView.heightAnchor)
         ])
         
-        mainScrollView.bringSubviewToFront(menuContentView)
-        mainScrollView.bringSubviewToFront(headerContentView)
+        switch self.menuPosition {
+        case .normal:
+            mainScrollView.bringSubviewToFront(menuContentView)
+            mainScrollView.bringSubviewToFront(headerContentView)
+        case .navigation:
+            break
+        }
+        
+
     }
     
     internal func updateOriginContent() {

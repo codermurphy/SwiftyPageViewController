@@ -8,6 +8,20 @@
 
 import UIKit
 
+extension UIFont {
+    var weightValue: Float {
+        guard let value = traits[.weight] as? NSNumber else {
+            return 0
+        }
+        return value.floatValue
+    }
+    
+    private var traits: [UIFontDescriptor.TraitKey: Any] {
+        return fontDescriptor.object(forKey: .traits) as? [UIFontDescriptor.TraitKey: Any] ?? [:]
+    }
+}
+
+
 extension UIColor {
     
     var rgb: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
@@ -112,33 +126,46 @@ open class MPMenuItemView: UIButton {
     }
     
     public func showNormalStyle() {
-        self.isSelected = false
+        //self.isSelected = false
+        self.configAttributedText(0)
     }
     
     public func showSelectedStyle() {
-        self.isSelected = true
+        //self.isSelected = true
+        self.configAttributedText(1)
     }
     
-//    private func configAttributedText(_ rate: CGFloat) {
-//        let r = nomalTextColors.red + (selectedTextColors.red - nomalTextColors.red) * rate
-//        let g = nomalTextColors.green + (selectedTextColors.green - nomalTextColors.green) * rate
-//        let b = nomalTextColors.blue + (selectedTextColors.blue - nomalTextColors.blue) * rate
-//        let a = nomalTextColors.alpha + (selectedTextColors.alpha - nomalTextColors.alpha) * rate
-//        
-//        
-//       // let strokeWidth = floor(CGFloat(selectedFont.weightValue - normalFont.weightValue) * 8.0) * rate
-//
-//        
-//        let color =  UIColor(red: r, green: g, blue: b, alpha: a)
-//            let attributes: [NSAttributedString.Key: Any] = [
-//                .font: font,
-//                .foregroundColor: color,
-//                .strokeWidth: -abs(0),
-//                .strokeColor: color
-//            ]
-//
-//            //attributedText = NSAttributedString(string: text, attributes: attributes)
-//    }
+    private func configAttributedText(_ rate: CGFloat) {
+        if rate == 0 {
+            
+            self.isSelected = false
+        }
+        else if rate == 1 {
+            self.isSelected = true
+        }
+        else{
+            let r = nomalTextColors.red + (selectedTextColors.red - nomalTextColors.red) * rate
+            let g = nomalTextColors.green + (selectedTextColors.green - nomalTextColors.green) * rate
+            let b = nomalTextColors.blue + (selectedTextColors.blue - nomalTextColors.blue) * rate
+            let a = nomalTextColors.alpha + (selectedTextColors.alpha - nomalTextColors.alpha) * rate
+                 
+            let strokeWidth = floor(CGFloat(selectedFont.weightValue - normalFont.weightValue) * 8.0) * rate
+            let fontSize = self.normalFont.pointSize + (selectedFont.pointSize - normalFont.pointSize) * rate
+            let font = self.normalFont.withSize(fontSize)
+
+            let color =  UIColor(red: r, green: g, blue: b, alpha: a)
+                let attributes: [NSAttributedString.Key: Any] = [
+                    .font: font,
+                    .foregroundColor: color,
+                    .strokeWidth: -abs(strokeWidth),
+                    .strokeColor: color
+                ]
+
+            let attrsText = NSAttributedString(string: self.title, attributes: attributes)
+            self.setAttributedTitle(attrsText, for: .normal)
+        }
+
+    }
 
 
 }

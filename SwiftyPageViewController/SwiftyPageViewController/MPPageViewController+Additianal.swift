@@ -6,83 +6,12 @@
 //  Copyright © 2020 QiHe. All rights reserved.
 //
 
+
 import UIKit
 
-extension MPPageBaseViewController {
-    public func updateHeaderViewHeight(animated: Bool = false,
-                                       duration: TimeInterval = 0.25,
-                                       completion: ((Bool) -> Void)? = nil) {
-        
-        if let _ = headerViewFor(self) {
-            headerViewHeight = headerViewHeightFor(self)
-            sillValue = headerViewHeight - menuViewPinHeight
-                   
-            mainScrollView.headerViewHeight = headerViewHeight
-            headerViewConstraint?.constant = headerViewHeight
-                   
-            var manualHandel = false
-            if mainScrollView.contentOffset.y < sillValue {
-                currentChildScrollView?.contentOffset = currentChildScrollView?.mp_originOffset ?? .zero
-                currentChildScrollView?.mp_isCanScroll = false
-                mainScrollView.mp_isCanScroll = true
-                manualHandel = true
-
-            } else if mainScrollView.contentOffset.y == sillValue  {
-                mainScrollView.mp_isCanScroll = false
-                manualHandel = true
-
-            }
-            let isAdsorption = (headerViewHeight <= 0.0) ? true : !mainScrollView.mp_isCanScroll
-            if animated {
-                UIView.animate(withDuration: duration, animations: {
-                    self.mainScrollView.layoutIfNeeded()
-                    if manualHandel {
-                        self.pageController(self, menuView: isAdsorption)
-                    }
-                }) { (finish) in
-                    completion?(finish)
-                }
-            } else {
-                self.pageController(self, menuView: isAdsorption)
-                completion?(true)
-            }
-        }
-        else {
-            currentChildScrollView?.mp_isCanScroll = true
-            mainScrollView.mp_isCanScroll = false
-        }
-       
-    }
+extension MPPageViewController {
     
-    public func setSelect(index: Int, animation: Bool) {
-        let offset = CGPoint(x: contentScrollView.bounds.width * CGFloat(index),
-                             y: contentScrollView.contentOffset.y)
-        contentScrollView.setContentOffset(offset, animated: animation)
-        if animation == false {
-            contentScrollViewDidEndScroll(contentScrollView)
-        }
-    }
-    
-    public func reloadData() {
-        mainScrollView.isUserInteractionEnabled = false
-        clear()
-        obtainDataSource()
-        updateOriginContent()
-        setupDataSource()
-        view.layoutIfNeeded()
-        if originIndex > 0 {
-            setSelect(index: originIndex, animation: false)
-        } else {
-            showChildViewContoller(at: originIndex)
-            didDisplayViewController(at: originIndex)
-        }
-        mainScrollView.isUserInteractionEnabled = true
-    }
-}
-
-extension MPPageBaseViewController: UIScrollViewDelegate {
-    
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         if scrollView == mainScrollView {
             pageController(self, mainScrollViewDidScroll: scrollView)
@@ -94,7 +23,50 @@ extension MPPageBaseViewController: UIScrollViewDelegate {
                     scrollView.mp_isCanScroll = false
                     pageController(self, menuView: !scrollView.mp_isCanScroll)
                 } else {
-                    
+                    if self.refreshPosition == .headerTop {
+                        if scrollView.mp_isCanScroll == false {
+                            pageController(self, menuView: true)
+                            if let canScroll = currentChildScrollView?.mp_isCanScroll,canScroll == true {
+                                 scrollView.contentOffset = CGPoint(x: 0, y: sillValue)
+                            }
+                        } else {
+                            pageController(self, menuView: false)
+                        }
+                    }
+                    else {
+                        if offsetY <= 0 {
+                            scrollView.contentOffset = CGPoint(x: 0, y: 0)
+                            currentChildScrollView?.mp_isCanScroll = true
+                            scrollView.mp_isCanScroll = false
+                        }
+                        else {
+                            if offsetY >= sillValue {
+                                scrollView.contentOffset = CGPoint(x: 0, y: sillValue)
+                                currentChildScrollView?.mp_isCanScroll = true
+                                scrollView.mp_isCanScroll = false
+                            }
+                            else {
+                                if scrollView.mp_isCanScroll == false {
+                                    pageController(self, menuView: true)
+                                    if let canScroll = currentChildScrollView?.mp_isCanScroll,canScroll == true {
+                                         scrollView.contentOffset = CGPoint(x: 0, y: sillValue)
+                                    }
+                                } else {
+                                    pageController(self, menuView: false)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                if offsetY >= 0 {
+                    scrollView.contentOffset = CGPoint(x: 0, y: 0)
+                    currentChildScrollView?.mp_isCanScroll = true
+                    scrollView.mp_isCanScroll = false
+                }
+                else {
+
                     if scrollView.mp_isCanScroll == false {
                         pageController(self, menuView: true)
                         if let canScroll = currentChildScrollView?.mp_isCanScroll,canScroll == true {
@@ -105,106 +77,13 @@ extension MPPageBaseViewController: UIScrollViewDelegate {
                     }
                 }
             }
-            else {
-                if let pageControler = self as? MPPageViewController {
-                    if pageControler.refreshPosition == .menuBottom {
-                        if offsetY >= 0 {
-                            scrollView.contentOffset = CGPoint(x: 0, y: 0)
-                            currentChildScrollView?.mp_isCanScroll = true
-                            scrollView.mp_isCanScroll = false
-                        }
-                        else {
-                            if let canScroll = currentChildScrollView?.mp_isCanScroll,canScroll == true {
-                                 scrollView.contentOffset = CGPoint(x: 0, y: 0)
-                            }
-                        }
-                    }
-                    else {
-                        if offsetY >= 0 {
-                            scrollView.contentOffset = CGPoint(x: 0, y: 0)
-                            currentChildScrollView?.mp_isCanScroll = true
-                            scrollView.mp_isCanScroll = false
-                        }
-                        else {
-                            
-                            if scrollView.mp_isCanScroll == false {
-                                pageController(self, menuView: true)
-                                if let canScroll = currentChildScrollView?.mp_isCanScroll,canScroll == true {
-                                     scrollView.contentOffset = CGPoint(x: 0, y: sillValue)
-                                }
-                            } else {
-                                pageController(self, menuView: false)
-                            }
-                        }
-                    }
-                }
-                else {
-                    if offsetY >= 0 {
-                        scrollView.contentOffset = CGPoint(x: 0, y: 0)
-                        currentChildScrollView?.mp_isCanScroll = true
-                        scrollView.mp_isCanScroll = false
-                    }
-                    else {
-                        if let canScroll = currentChildScrollView?.mp_isCanScroll,canScroll == true {
-                             scrollView.contentOffset = CGPoint(x: 0, y: 0)
-                        }
-                    }
-                }
-
-            }
         } else {
             pageController(self, contentScrollViewDidScroll: scrollView)
             layoutChildViewControlls()
         }
     }
     
-    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        if scrollView == contentScrollView {
-            mainScrollView.isScrollEnabled = false
-        }
-    }
-
-    
-    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if scrollView == contentScrollView {
-            mainScrollView.isScrollEnabled = true
-            if decelerate == false {
-                contentScrollViewDidEndScroll(contentScrollView)
-            }
-        }
-    }
-    
-    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        if scrollView == contentScrollView {
-            contentScrollViewDidEndScroll(contentScrollView)
-        }
-    }
-    
-    
-    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        if scrollView == contentScrollView {
-            contentScrollViewDidEndScroll(contentScrollView)
-        }
-    }
-    
-    public func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
-        guard scrollView == mainScrollView else {
-            if let canScroll = currentChildScrollView?.mp_isCanScroll,canScroll == false {
-                return true
-            }
-            else {
-                return false
-            }
-        }
-        currentChildScrollView?.mp_isCanScroll = false
-        currentChildScrollView?.setContentOffset(currentChildScrollView?.mp_originOffset ?? .zero, animated: true)
-        return true
-    }
-    
-}
-
-extension MPPageBaseViewController {
-    internal func childScrollViewDidScroll(_ scrollView: UIScrollView) {
+    public override func childScrollViewDidScroll(_ scrollView: UIScrollView) {
         if let _ = headerViewFor(self) {
             if scrollView.bounds.width < scrollView.contentSize.width {
                 if scrollView.mp_isCanScroll == false {
@@ -223,42 +102,7 @@ extension MPPageBaseViewController {
             }
             else {
                 
-                if let pageController = self as? MPPageViewController {
-                    
-                    if pageController.refreshPosition == .headerTop {
-                        if scrollView.mp_isCanScroll == false {
-
-                            scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
-                        }
-                        let offsetY = scrollView.contentOffset.y
-                        if offsetY <= (scrollView.mp_originOffset ?? .zero).y {
-                            scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
-                            scrollView.mp_isCanScroll = false
-                            mainScrollView.mp_isCanScroll = true
-                        }
-                    }
-                    else {
-                        if scrollView.contentOffset.y < 0 {
-                            mainScrollView.contentOffset = .zero
-                            mainScrollView.mp_isCanScroll = false
-                        }
-                        else {
-                            mainScrollView.mp_isCanScroll = true
-                            if scrollView.mp_isCanScroll == false {
-
-                                scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
-                            }
-                            let offsetY = scrollView.contentOffset.y
-                            if offsetY <= (scrollView.mp_originOffset ?? .zero).y {
-                                scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
-                                scrollView.mp_isCanScroll = false
-                                mainScrollView.mp_isCanScroll = true
-                            }
-                        }
-                    }
-
-                }
-                else {
+                if self.refreshPosition == .headerTop {
                     if scrollView.mp_isCanScroll == false {
 
                         scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
@@ -270,43 +114,62 @@ extension MPPageBaseViewController {
                         mainScrollView.mp_isCanScroll = true
                     }
                 }
+                else {
+                    if scrollView.contentOffset.y <= 0 {
+                        if !self.isFixedHeaderView {
+                            scrollView.mp_isCanScroll = false
+                            mainScrollView.mp_isCanScroll = true
+                        }
+
+                    }
+                    else {
+                        if scrollView.mp_isCanScroll == false {
+
+                            scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
+                        }
+                        let offsetY = scrollView.contentOffset.y
+                        if offsetY <= (scrollView.mp_originOffset ?? .zero).y {
+                            scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
+                            scrollView.mp_isCanScroll = false
+                            mainScrollView.mp_isCanScroll = true
+                        }
+                    }
+
+
+//                    if scrollView.contentOffset.y < 0 {
+//                        mainScrollView.contentOffset = .zero
+//                        mainScrollView.mp_isCanScroll = false
+//                    }
+//                    else {
+//                        mainScrollView.mp_isCanScroll = true
+//                        if scrollView.mp_isCanScroll == false {
+//
+//                            scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
+//                        }
+//                        let offsetY = scrollView.contentOffset.y
+//                        if offsetY <= (scrollView.mp_originOffset ?? .zero).y {
+//                            scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
+//                            scrollView.mp_isCanScroll = false
+//                            mainScrollView.mp_isCanScroll = true
+//                        }
+//                    }
+                }
             }
         }
         else {
-            if scrollView.mp_isCanScroll == false {
-
-                scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
+            if self.refreshPosition == .menuTop {
+                if mainScrollView.mp_isCanScroll {
+                    scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
+                    scrollView.mp_isCanScroll = false
+                }
+                else {
+                    scrollView.mp_isCanScroll = true
+                    if scrollView.contentOffset.y <= 0 {
+                        mainScrollView.mp_isCanScroll = true
+                        scrollView.mp_isCanScroll = false
+                    }
+                }
             }
-            let offsetY = scrollView.contentOffset.y
-            if offsetY <= (scrollView.mp_originOffset ?? .zero).y {
-                scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
-                scrollView.mp_isCanScroll = false
-                mainScrollView.mp_isCanScroll = true
-            }
-//            if let pageController = self as? MPPageViewController {
-//                switch pageController.refreshPosition {
-//                case .menuTop:
-//                    if mainScrollView.mp_isCanScroll {
-//                        scrollView.contentOffset = scrollView.mp_originOffset ?? .zero
-//                        scrollView.mp_isCanScroll = false
-//                        mainScrollView.mp_isCanScroll = true
-//                    }
-//                    else {
-//                        scrollView.mp_isCanScroll = true
-//                        mainScrollView.mp_isCanScroll = false
-//                    }
-//                case .menuBottom:
-//                    scrollView.mp_isCanScroll = true
-//                    mainScrollView.mp_isCanScroll = false
-//                default:
-//                    break
-//                }
-//            }
-//            else {
-//                scrollView.mp_isCanScroll = true
-//                mainScrollView.mp_isCanScroll = false
-//
-//            }
         }
     }
 }
