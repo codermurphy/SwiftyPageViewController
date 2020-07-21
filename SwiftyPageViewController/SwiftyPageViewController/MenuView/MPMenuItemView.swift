@@ -81,13 +81,15 @@ open class MPMenuItemView: UIButton {
     private var textAndImageSpacing: CGFloat = 0
     private var textAndImageType: MPMenuItemTextAndImageType = .default
     private var hasImageInfo: Bool = false
+    private var isGradient: Bool = false
     
     internal var rate: CGFloat = 0.0 {
         didSet {
             guard rate > 0.0, rate < 1.0 else {
                 return
             }
-            configAttributedText(rate)
+            if isGradient { configAttributedText(rate) }
+            
         }
     }
     
@@ -123,7 +125,8 @@ open class MPMenuItemView: UIButton {
          normalIconUrl: String?,
          selectedIconUrl: String?,
          textAndImageType: MPMenuItemTextAndImageType = .default,
-         textAndImageSpacing: CGFloat = 5 ) {
+         textAndImageSpacing: CGFloat = 5,
+         isGradient: Bool = false ) {
         
         self.title = title
         self.normalFont = normalFont
@@ -134,6 +137,7 @@ open class MPMenuItemView: UIButton {
         
         self.textAndImageSpacing = textAndImageSpacing
         self.textAndImageType = textAndImageType
+        self.isGradient = isGradient
         
         let normalAttrString = NSAttributedString(string: title, attributes: [NSAttributedString.Key.font : normalFont,NSAttributedString.Key.foregroundColor : nomalTextColor])
         let selectedAttString = NSAttributedString(string: title, attributes: [NSAttributedString.Key.font : selectedFont,NSAttributedString.Key.foregroundColor : selectedTextColor])

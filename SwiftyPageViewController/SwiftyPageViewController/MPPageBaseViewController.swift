@@ -184,7 +184,7 @@ open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource
         
         mainScrollView.headerViewHeight = headerViewHeight
         mainScrollView.menuViewHeight = menuViewHeight
-        if #available(iOS 13.0, *) {
+        if #available(iOS 11.0, *) {
             mainScrollView.contentInsetAdjustmentBehavior = .never
         } else {
             automaticallyAdjustsScrollViewInsets = false
@@ -192,12 +192,23 @@ open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource
         
         view.addSubview(mainScrollView)
         let contentInset = contentInsetFor(self)
-        let constraints = [
-            mainScrollView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: contentInset.top),
-            mainScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentInset.left),
-            mainScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -contentInset.bottom),
-            mainScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentInset.right)
-        ]
+        var constraints: [NSLayoutConstraint] = []
+        if #available(iOS 11.0, *) {
+            constraints = [
+                mainScrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: contentInset.top),
+                mainScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentInset.left),
+                mainScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -contentInset.bottom),
+                mainScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentInset.right)
+            ]
+        } else {
+            constraints = [
+                mainScrollView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: contentInset.top),
+                mainScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentInset.left),
+                mainScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -contentInset.bottom),
+                mainScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentInset.right)
+            ]
+        }
+
         mainScrollViewConstraints = constraints
         NSLayoutConstraint.activate(constraints)
         
@@ -290,8 +301,8 @@ open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource
         
         switch self.menuPosition {
         case .normal:
-            mainScrollView.bringSubviewToFront(menuContentView)
             mainScrollView.bringSubviewToFront(headerContentView)
+            mainScrollView.bringSubviewToFront(menuContentView)
         case .navigation:
             break
         }

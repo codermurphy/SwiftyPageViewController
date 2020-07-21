@@ -172,7 +172,7 @@ public class MPPageViewController: MPPageBaseViewController {
                     self.headerContentView.translatesAutoresizingMaskIntoConstraints = true
                     var headViewFrame = self.headerContentView.frame
                     let maxY = headViewFrame.maxY
-                    headViewFrame.size.height = 120 - offSetY
+                    headViewFrame.size.height = self.defaultHeaderHeight - offSetY
                     headViewFrame.origin.y = maxY - headViewFrame.size.height
                     self.headerContentView.frame = headViewFrame
                 }
@@ -240,7 +240,7 @@ public class MPPageViewController: MPPageBaseViewController {
     public override func pageController(_ pageController: MPPageBaseViewController, mainScrollViewDidScroll scrollView: UIScrollView) {
         if scrollView.contentOffset.y <= 0 { self.zoomHeaderView(offSetY: scrollView.contentOffset.y) }
         if scrollView.contentOffset.y > 0 {
-            let progress = scrollView.contentOffset.y / self.defaultHeaderHeight
+            let progress = scrollView.contentOffset.y / (self.defaultHeaderHeight - self.defaultMenuPinHeight)
             self.pageDelegate?.pageController?(self, progress: progress > 1 ? 1 : progress)
         }
     }
@@ -250,7 +250,7 @@ public class MPPageViewController: MPPageBaseViewController {
     }
     
     public override func pageController(_ pageController: MPPageBaseViewController, contentScrollViewDidScroll scrollView: UIScrollView) {
-
+        
         self.menuView.updateLayout(scrollView)
     }
     
@@ -279,12 +279,10 @@ public class MPPageViewController: MPPageBaseViewController {
 }
 
 extension MPPageViewController: MPMenuViewDelegate {
-   public func menuView(_ menuView: MPMenuView, didSelectedItemAt index: Int) {
-    guard index < self.menuContents.count else {
-            return
-        }
-        setSelect(index: index, animation: true)
+    public func menuView(_ menuView: MPMenuView, didSelectedItemAt index: Int) {
+        guard index < self.menuContents.count else { return }
+        let animation = abs(self.currentIndex - index) == 1 ? true : false
+        setSelect(index: index, animation: animation)
+    
     }
-    
-    
 }

@@ -244,6 +244,7 @@ extension ViewController: UITableViewDelegate {
             next.menuView.backgroundColor = .clear
             self.navigationController?.pushViewController(next, animated: true)
         case 7:
+            let contentInset: MPMenuStyle = .contentInset(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
             let indicatorBackgroundColor: MPIndicatorStyle = .backgroundColor(.brown)
             let indicatorHeight: MPIndicatorStyle = .height(3)
             let indicatrIsHidden: MPIndicatorStyle = .hidden(false)
@@ -266,7 +267,7 @@ extension ViewController: UITableViewDelegate {
             
             let extarView = MPPageMenuContainer()
             extarView.backgroundColor = .red
-            let next = MPPageViewController(configs: configs, menuContents: menus, controllers: controllers ,headerView:headerView,refreshPosition: .headerTop,menuViewHeight: 40,menuExtraView: extarView ,defaultMenuPinHeight: 0, defaultIndex: 0)
+            let next = MPPageViewController(configs: configs, menuContents: menus, controllers: controllers ,headerView:headerView,refreshPosition: .headerTop,menuViewHeight: 40,menuExtraView: extarView,menuExtraPoistion:.left(width: 40) ,defaultMenuPinHeight: 0, defaultIndex: 0)
             self.navigationController?.pushViewController(next, animated: true)
         default:
             break

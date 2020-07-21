@@ -22,6 +22,7 @@ public enum MPMenuStyle {
     case selectedTextFont(UIFont)
     case normalTextColor(UIColor)
     case selectedTextColor(UIColor)
+    case gradient(Bool)
     case itemSpace(CGFloat)
     case contentInset(UIEdgeInsets)
     case indicatorStyle(MPIndicatorViewStyle)
@@ -85,6 +86,8 @@ public class MPMenuView: UIView {
             case .itemTextAndImageStyle(let type, let spcaing):
                 self.itemTextAndImageType = type
                 self.itemTextAndImageSpacing = spcaing
+            case .gradient(let gradient):
+                self.isGrandient = gradient
             }
         }
         self.extraView = extraView
@@ -109,9 +112,19 @@ public class MPMenuView: UIView {
     
     private var normalTextFont = UIFont.systemFont(ofSize: 15)
     private var selectedTextFont = UIFont.systemFont(ofSize: 15)
+    private var isGrandient: Bool = false
     
     weak var extraView: UIView?
     private var extraViewPosition: MPMenuExtraViewPostion = .right(width: 40)
+    
+    private var extraViewWidth: CGFloat {
+        switch self.extraViewPosition {
+        case let .left(width):
+            return width
+        case let .right(width):
+            return width
+        }
+    }
     
     public var itemSpace:CGFloat = 30.0 {
         didSet {
@@ -174,7 +187,8 @@ public class MPMenuView: UIView {
                                     normalIconUrl: item.normalUrl,
                                     selectedIconUrl: item.selectedUrl,
                                     textAndImageType: self.itemTextAndImageType,
-                                    textAndImageSpacing: self.itemTextAndImageSpacing)
+                                    textAndImageSpacing: self.itemTextAndImageSpacing,
+                                    isGradient: self.isGrandient)
                     menuItem.addTarget(self, action: #selector(itemClickedAction(button:)), for: .touchUpInside)
                     stackView.addArrangedSubview(menuItem)
                     menuItemViews.append(menuItem)
@@ -186,7 +200,8 @@ public class MPMenuView: UIView {
                 let labelWidth = stackView.arrangedSubviews.first?.bounds.width ?? 0.0
                 if self.layoutStyle == .auto {
                     let totalWidth = stackView.arrangedSubviews.map { $0.bounds.width}.reduce(0) { $0 + $1}
-                    let originWidth = self.bounds.width == 0 ? self.superview?.bounds.width ?? 0 : self.bounds.width
+                    var originWidth = self.bounds.width == 0 ? self.superview?.bounds.width ?? 0 : self.bounds.width
+                    originWidth -= self.extraView == nil ? 0 : self.extraViewWidth
                     if totalWidth + CGFloat(self.titles.count - 1) * self.itemSpace <= originWidth - self.contentInset.left - (self.contentInset.right != 0 ? self.contentInset.right : self.contentInset.left) {
                         let diff = originWidth - totalWidth -  self.contentInset.left - (self.contentInset.right != 0 ? self.contentInset.right : self.contentInset.left)
                         self.itemSpace = diff / CGFloat(titles.count - 1)
