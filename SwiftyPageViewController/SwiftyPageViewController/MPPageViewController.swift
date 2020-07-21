@@ -16,6 +16,16 @@ public enum MPMenuRefreshPosition {
     
 }
 
+@objc public protocol MPPageViewControllerDelegate: NSObjectProtocol {
+    
+    @objc optional func pageController(_ pageController: MPPageViewController,  progress: CGFloat)
+    @objc optional func pageController(_ pageController: MPPageViewController, contentScrollViewDidEndScroll scrollView: UIScrollView)
+    @objc optional func pageController(_ pageController: MPPageViewController, willCache viewController: UIViewController, forItemAt index: Int)
+    @objc optional func pageController(_ pageController: MPPageViewController, willDisplay viewController: UIViewController, forItemAt index: Int)
+    @objc optional func pageController(_ pageController: MPPageBaseViewController, didDisplay viewController: UIViewController, forItemAt index: Int)
+    @objc optional func pageController(_ pageController: MPPageBaseViewController, menuView isAdsorption: Bool)
+}
+
 public class MPPageViewController: MPPageBaseViewController {
     
     // MARK: - initial methods
@@ -91,8 +101,7 @@ public class MPPageViewController: MPPageBaseViewController {
         
         self.menuView.titles = self.menuContents
         
-        self.currentChildScrollView?.mp_isCanScroll = true
-        
+        if self.isFixedHeaderView { self.currentChildScrollView?.mp_isCanScroll = true }
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -139,6 +148,11 @@ public class MPPageViewController: MPPageBaseViewController {
     
     /// headerView高度
     private var defaultHeaderHeight: CGFloat = 0
+    
+    /// 容器边距
+    private var containerEdge: UIEdgeInsets = .zero
+    
+    weak var pageDelegate: MPPageViewControllerDelegate?
      
     // MARK: - UI
     private(set) lazy var menuView: MPMenuView = {
@@ -225,34 +239,42 @@ public class MPPageViewController: MPPageBaseViewController {
     
     public override func pageController(_ pageController: MPPageBaseViewController, mainScrollViewDidScroll scrollView: UIScrollView) {
         if scrollView.contentOffset.y <= 0 { self.zoomHeaderView(offSetY: scrollView.contentOffset.y) }
+        if scrollView.contentOffset.y > 0 {
+            let progress = scrollView.contentOffset.y / self.defaultHeaderHeight
+            self.pageDelegate?.pageController?(self, progress: progress > 1 ? 1 : progress)
+        }
     }
     
     public override func pageController(_ pageController: MPPageBaseViewController, contentScrollViewDidEndScroll scrollView: UIScrollView) {
-        
+        self.pageDelegate?.pageController?(self, contentScrollViewDidEndScroll: scrollView)
     }
     
     public override func pageController(_ pageController: MPPageBaseViewController, contentScrollViewDidScroll scrollView: UIScrollView) {
+
         self.menuView.updateLayout(scrollView)
     }
     
     public override func pageController(_ pageController: MPPageBaseViewController, willCache viewController: (UIViewController & MPChildViewControllerProtocol), forItemAt index: Int) {
-        
+        self.pageDelegate?.pageController?(self, willCache: viewController, forItemAt: index)
     }
     
     public override func pageController(_ pageController: MPPageBaseViewController, willDisplay viewController: (UIViewController & MPChildViewControllerProtocol), forItemAt index: Int) {
-        
+        //self.menuView.checkState(animation: false)
+
+        self.pageDelegate?.pageController?(self, willDisplay: viewController, forItemAt: index)
     }
     
     public override func pageController(_ pageController: MPPageBaseViewController, didDisplay viewController: (UIViewController & MPChildViewControllerProtocol), forItemAt index: Int) {
         self.menuView.checkState(animation: true)
+        self.pageDelegate?.pageController?(self, didDisplay: viewController, forItemAt: index)
     }
     
     public override func pageController(_ pageController: MPPageBaseViewController, menuView isAdsorption: Bool) {
-        
+        self.pageDelegate?.pageController?(self, menuView: isAdsorption)
     }
     
     public override func contentInsetFor(_ pageController: MPPageBaseViewController) -> UIEdgeInsets {
-        return .zero
+        return self.containerEdge
     }
 }
 

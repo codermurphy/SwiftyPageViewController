@@ -173,7 +173,7 @@ public class MPMenuView: UIView {
                                     selectedIcon: item.selectedIcon,
                                     normalIconUrl: item.normalUrl,
                                     selectedIconUrl: item.selectedUrl,
-                                    TextAndImageType: self.itemTextAndImageType,
+                                    textAndImageType: self.itemTextAndImageType,
                                     textAndImageSpacing: self.itemTextAndImageSpacing)
                     menuItem.addTarget(self, action: #selector(itemClickedAction(button:)), for: .touchUpInside)
                     stackView.addArrangedSubview(menuItem)
@@ -199,7 +199,7 @@ public class MPMenuView: UIView {
                 var progressWidth: CGFloat = 0
                 switch switchStyle {
                 case .telescopic:
-                    progressWidth = indicatorViewStyle.originWidth
+                    progressWidth = labelWidth + indicatorViewStyle.extraWidth
                 default:
                     switch indicatorViewStyle.shape {
                     case .line:
@@ -457,7 +457,7 @@ public class MPMenuView: UIView {
         case .telescopic:
             indicatorView.snp.updateConstraints { (make) in
                 let rate = (scrollRate <= 0.5 ? scrollRate : (1.0 - scrollRate)) * indicatorViewStyle.elasticValue
-                make.width.equalTo(max(centerXDifference * rate + indicatorViewStyle.originWidth, 0))
+                make.width.equalTo(max(centerXDifference * rate + currentWidth + indicatorViewStyle.extraWidth, 0))
                 make.centerX.equalTo(stackView.snp.leading).offset(leadingMargin + itemMidSpace * scrollRate)
             }
         }

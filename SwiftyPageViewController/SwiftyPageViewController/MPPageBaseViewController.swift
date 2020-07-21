@@ -135,6 +135,7 @@ open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource
     
     deinit {
         childScrollViewObservation?.invalidate()
+        debugPrint(Self.self)
     }
     
     // MARK: - methods

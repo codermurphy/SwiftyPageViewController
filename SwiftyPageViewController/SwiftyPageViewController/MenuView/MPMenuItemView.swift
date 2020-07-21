@@ -79,6 +79,7 @@ open class MPMenuItemView: UIButton {
     private var nomalTextColors = UIColor.white.rgb
     private var selectedTextColors = UIColor.red.rgb
     private var textAndImageSpacing: CGFloat = 0
+    private var textAndImageType: MPMenuItemTextAndImageType = .default
     private var hasImageInfo: Bool = false
     
     internal var rate: CGFloat = 0.0 {
@@ -90,12 +91,23 @@ open class MPMenuItemView: UIButton {
         }
     }
     
+    open override var isSelected: Bool {
+        didSet {
+            if self.hasImageInfo {
+                self.mp_centerTextAndImage(type: textAndImageType, spacing: textAndImageSpacing)
+            }
+        }
+    }
+    
     open override var intrinsicContentSize: CGSize {
         let button = MPMenuItemView(type: .custom)
         button.setAttributedTitle(self.attributedTitle(for: .selected), for: .normal)
         button.setImage(self.image(for: .selected), for: .normal)
+        if self.hasImageInfo {
+            button.mp_centerTextAndImage(type: textAndImageType, spacing: textAndImageSpacing)
+        }
         button.sizeToFit()
-        return self.hasImageInfo ? CGSize(width: button.frame.width + self.textAndImageSpacing, height: button.frame.height) : button.frame.size
+        return button.frame.size
     }
     
 
@@ -110,7 +122,7 @@ open class MPMenuItemView: UIButton {
          selectedIcon: UIImage?,
          normalIconUrl: String?,
          selectedIconUrl: String?,
-         TextAndImageType: MPMenuItemTextAndImageType = .default,
+         textAndImageType: MPMenuItemTextAndImageType = .default,
          textAndImageSpacing: CGFloat = 5 ) {
         
         self.title = title
@@ -121,6 +133,7 @@ open class MPMenuItemView: UIButton {
         self.selectedTextColors = selectedTextColor.rgb
         
         self.textAndImageSpacing = textAndImageSpacing
+        self.textAndImageType = textAndImageType
         
         let normalAttrString = NSAttributedString(string: title, attributes: [NSAttributedString.Key.font : normalFont,NSAttributedString.Key.foregroundColor : nomalTextColor])
         let selectedAttString = NSAttributedString(string: title, attributes: [NSAttributedString.Key.font : selectedFont,NSAttributedString.Key.foregroundColor : selectedTextColor])
@@ -132,7 +145,7 @@ open class MPMenuItemView: UIButton {
         self.setImage(selectedIcon, for: .selected)
 
         if normalIcon != nil  || selectedIcon != nil || normalIconUrl != nil || selectedIconUrl != nil {
-            self.mp_centerTextAndImage(type: TextAndImageType, spacing: textAndImageSpacing)
+            self.mp_centerTextAndImage(type: textAndImageType, spacing: textAndImageSpacing)
             self.hasImageInfo = true
         }
         
@@ -155,7 +168,6 @@ open class MPMenuItemView: UIButton {
         let b = nomalTextColors.blue + (selectedTextColors.blue - nomalTextColors.blue) * rate
         let a = nomalTextColors.alpha + (selectedTextColors.alpha - nomalTextColors.alpha) * rate
              
-        let strokeWidth = floor(CGFloat(selectedFont.weightValue - normalFont.weightValue) * 8.0) * rate
         let fontSize = self.normalFont.pointSize + (selectedFont.pointSize - normalFont.pointSize) * rate
         let font = self.normalFont.withSize(fontSize)
 
@@ -163,13 +175,15 @@ open class MPMenuItemView: UIButton {
             let attributes: [NSAttributedString.Key: Any] = [
                 .font: font,
                 .foregroundColor: color,
-                .strokeWidth: -abs(strokeWidth),
+                //.strokeWidth: -abs(0),
                 .strokeColor: color
             ]
 
         let attrsText = NSAttributedString(string: self.title, attributes: attributes)
         self.setAttributedTitle(attrsText, for: .normal)
-        
+        if self.hasImageInfo {
+            self.mp_centerTextAndImage(type: textAndImageType, spacing: textAndImageSpacing)
+        }
         if rate == 0 {
             
             self.isSelected = false
