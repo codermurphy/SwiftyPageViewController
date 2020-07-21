@@ -36,8 +36,8 @@ open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource
     
     internal var headerViewHeight: CGFloat = 0.0
     internal lazy var headerContentView = UIView()
-    private let menuContentView: MPPageNavigationItemContainer = {
-        let menu = MPPageNavigationItemContainer()
+    private let menuContentView: MPPageMenuContainer = {
+        let menu = MPPageMenuContainer()
         menu.backgroundColor = .clear
         return menu
     }()

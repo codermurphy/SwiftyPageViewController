@@ -78,14 +78,24 @@ open class MPMenuItemView: UIButton {
     private var selectedFont: UIFont = .systemFont(ofSize: 12)
     private var nomalTextColors = UIColor.white.rgb
     private var selectedTextColors = UIColor.red.rgb
+    private var textAndImageSpacing: CGFloat = 0
+    private var hasImageInfo: Bool = false
     
     internal var rate: CGFloat = 0.0 {
         didSet {
             guard rate > 0.0, rate < 1.0 else {
                 return
             }
-            //configAttributedText(rate)
+            configAttributedText(rate)
         }
+    }
+    
+    open override var intrinsicContentSize: CGSize {
+        let button = MPMenuItemView(type: .custom)
+        button.setAttributedTitle(self.attributedTitle(for: .selected), for: .normal)
+        button.setImage(self.image(for: .selected), for: .normal)
+        button.sizeToFit()
+        return self.hasImageInfo ? CGSize(width: button.frame.width + self.textAndImageSpacing, height: button.frame.height) : button.frame.size
     }
     
 
@@ -110,6 +120,8 @@ open class MPMenuItemView: UIButton {
         self.nomalTextColors = nomalTextColor.rgb
         self.selectedTextColors = selectedTextColor.rgb
         
+        self.textAndImageSpacing = textAndImageSpacing
+        
         let normalAttrString = NSAttributedString(string: title, attributes: [NSAttributedString.Key.font : normalFont,NSAttributedString.Key.foregroundColor : nomalTextColor])
         let selectedAttString = NSAttributedString(string: title, attributes: [NSAttributedString.Key.font : selectedFont,NSAttributedString.Key.foregroundColor : selectedTextColor])
         
@@ -121,6 +133,7 @@ open class MPMenuItemView: UIButton {
 
         if normalIcon != nil  || selectedIcon != nil || normalIconUrl != nil || selectedIconUrl != nil {
             self.mp_centerTextAndImage(type: TextAndImageType, spacing: textAndImageSpacing)
+            self.hasImageInfo = true
         }
         
     }
@@ -136,35 +149,34 @@ open class MPMenuItemView: UIButton {
     }
     
     private func configAttributedText(_ rate: CGFloat) {
+        
+        let r = nomalTextColors.red + (selectedTextColors.red - nomalTextColors.red) * rate
+        let g = nomalTextColors.green + (selectedTextColors.green - nomalTextColors.green) * rate
+        let b = nomalTextColors.blue + (selectedTextColors.blue - nomalTextColors.blue) * rate
+        let a = nomalTextColors.alpha + (selectedTextColors.alpha - nomalTextColors.alpha) * rate
+             
+        let strokeWidth = floor(CGFloat(selectedFont.weightValue - normalFont.weightValue) * 8.0) * rate
+        let fontSize = self.normalFont.pointSize + (selectedFont.pointSize - normalFont.pointSize) * rate
+        let font = self.normalFont.withSize(fontSize)
+
+        let color =  UIColor(red: r, green: g, blue: b, alpha: a)
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: font,
+                .foregroundColor: color,
+                .strokeWidth: -abs(strokeWidth),
+                .strokeColor: color
+            ]
+
+        let attrsText = NSAttributedString(string: self.title, attributes: attributes)
+        self.setAttributedTitle(attrsText, for: .normal)
+        
         if rate == 0 {
             
             self.isSelected = false
         }
-        else if rate == 1 {
+        if rate == 1 {
             self.isSelected = true
         }
-        else{
-            let r = nomalTextColors.red + (selectedTextColors.red - nomalTextColors.red) * rate
-            let g = nomalTextColors.green + (selectedTextColors.green - nomalTextColors.green) * rate
-            let b = nomalTextColors.blue + (selectedTextColors.blue - nomalTextColors.blue) * rate
-            let a = nomalTextColors.alpha + (selectedTextColors.alpha - nomalTextColors.alpha) * rate
-                 
-            let strokeWidth = floor(CGFloat(selectedFont.weightValue - normalFont.weightValue) * 8.0) * rate
-            let fontSize = self.normalFont.pointSize + (selectedFont.pointSize - normalFont.pointSize) * rate
-            let font = self.normalFont.withSize(fontSize)
-
-            let color =  UIColor(red: r, green: g, blue: b, alpha: a)
-                let attributes: [NSAttributedString.Key: Any] = [
-                    .font: font,
-                    .foregroundColor: color,
-                    .strokeWidth: -abs(strokeWidth),
-                    .strokeColor: color
-                ]
-
-            let attrsText = NSAttributedString(string: self.title, attributes: attributes)
-            self.setAttributedTitle(attrsText, for: .normal)
-        }
-
     }
 
 

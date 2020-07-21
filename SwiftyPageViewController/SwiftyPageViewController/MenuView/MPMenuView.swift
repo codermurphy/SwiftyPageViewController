@@ -186,8 +186,9 @@ public class MPMenuView: UIView {
                 let labelWidth = stackView.arrangedSubviews.first?.bounds.width ?? 0.0
                 if self.layoutStyle == .auto {
                     let totalWidth = stackView.arrangedSubviews.map { $0.bounds.width}.reduce(0) { $0 + $1}
-                    if totalWidth + CGFloat(self.titles.count - 1) * self.itemSpace <= self.bounds.width - self.contentInset.left - (self.contentInset.right != 0 ? self.contentInset.right : self.contentInset.left) {
-                        let diff = self.bounds.width - totalWidth -  self.contentInset.left - (self.contentInset.right != 0 ? self.contentInset.right : self.contentInset.left)
+                    let originWidth = self.bounds.width == 0 ? self.superview?.bounds.width ?? 0 : self.bounds.width
+                    if totalWidth + CGFloat(self.titles.count - 1) * self.itemSpace <= originWidth - self.contentInset.left - (self.contentInset.right != 0 ? self.contentInset.right : self.contentInset.left) {
+                        let diff = originWidth - totalWidth -  self.contentInset.left - (self.contentInset.right != 0 ? self.contentInset.right : self.contentInset.left)
                         self.itemSpace = diff / CGFloat(titles.count - 1)
                         self.scrollView.isScrollEnabled = false
                     }
@@ -211,6 +212,7 @@ public class MPMenuView: UIView {
                 }
                 
                 let offset = stackView.arrangedSubviews.first?.frame.midX ?? 0.0
+                
                 indicatorView.snp.updateConstraints { (make) in
                     switch indicatorViewStyle.shape {
                     case let .line(isAutoWidth, width):

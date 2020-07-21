@@ -21,7 +21,7 @@ class ViewController: UIViewController {
         self.contentView.delegate = self
     }
     
-    private let styles: [String] = ["无HeaderView-刷新在顶部","无HeaderView-刷新菜单栏底部","有HeaderView-刷新在顶部","有HeaderView-刷新在菜单栏底部","固定headerView","headerView放大","Menu在Navigation中(.auto无法使用-待解决)","Menu带有额外View"]
+    private let styles: [String] = ["无HeaderView-刷新在顶部","无HeaderView-刷新菜单栏底部","有HeaderView-刷新在顶部","有HeaderView-刷新在菜单栏底部","固定headerView","headerView放大","Menu在Navigation中","Menu带有额外View"]
 
 }
 
@@ -57,7 +57,7 @@ extension ViewController: UITableViewDelegate {
         }
         
         let normalTextFont: MPMenuStyle = .normalTextFont(.systemFont(ofSize: 12))
-        let selectedTextFont: MPMenuStyle = .selectedTextFont(.systemFont(ofSize: 15))
+        let selectedTextFont: MPMenuStyle = .selectedTextFont(.systemFont(ofSize: 14))
         let normalTextColor: MPMenuStyle = .normalTextColor(.gray)
         let selectedTextColor: MPMenuStyle = .normalTextColor(.blue)
         let itemSpace: MPMenuStyle = .itemSpace(20)
@@ -264,9 +264,9 @@ extension ViewController: UITableViewDelegate {
             headerView.frame.size.height = 120
             headerView.backgroundColor = .green
             
-            let extarView = MPPageNavigationItemContainer()
+            let extarView = MPPageMenuContainer()
             extarView.backgroundColor = .red
-            let next = MPPageViewController(configs: configs, menuContents: menus, controllers: controllers ,headerView:headerView,isZooomHeaderView: true ,refreshPosition: .menuBottom,menuViewHeight: 40,menuExtraView: extarView ,defaultMenuPinHeight: 0, defaultIndex: 0)
+            let next = MPPageViewController(configs: configs, menuContents: menus, controllers: controllers ,headerView:headerView,refreshPosition: .headerTop,menuViewHeight: 40,menuExtraView: extarView ,defaultMenuPinHeight: 0, defaultIndex: 0)
             self.navigationController?.pushViewController(next, animated: true)
         default:
             break

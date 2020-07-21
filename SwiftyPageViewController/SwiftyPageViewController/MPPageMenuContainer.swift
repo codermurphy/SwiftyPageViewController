@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MPPageNavigationItemContainer: UIView {
+class MPPageMenuContainer: UIView {
     
     override var intrinsicContentSize: CGSize {
         return CGSize(width: self.bounds.width, height: UIView.layoutFittingExpandedSize.height)
