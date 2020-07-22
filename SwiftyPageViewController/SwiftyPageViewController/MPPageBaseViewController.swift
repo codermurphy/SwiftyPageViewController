@@ -426,23 +426,27 @@ open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource
         }
         pageController(self, willDisplay: targetViewController, forItemAt: index)
         
-        addChild(targetViewController)
-        targetViewController.beginAppearanceTransition(true, animated: false)
-        containView.addSubview(targetViewController.view)
-        targetViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            targetViewController.view.leadingAnchor.constraint(equalTo: containView.leadingAnchor),
-            targetViewController.view.trailingAnchor.constraint(equalTo: containView.trailingAnchor),
-            targetViewController.view.bottomAnchor.constraint(equalTo: containView.bottomAnchor),
-            targetViewController.view.topAnchor.constraint(equalTo: containView.topAnchor),
-            ])
-        targetViewController.endAppearanceTransition()
-        targetViewController.didMove(toParent: self)
-        targetViewController.view.layoutSubviews()
+        if cachedViewContoller == nil {
+            addChild(targetViewController)
+            targetViewController.beginAppearanceTransition(true, animated: false)
+            containView.addSubview(targetViewController.view)
+            targetViewController.view.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                targetViewController.view.leadingAnchor.constraint(equalTo: containView.leadingAnchor),
+                targetViewController.view.trailingAnchor.constraint(equalTo: containView.trailingAnchor),
+                targetViewController.view.bottomAnchor.constraint(equalTo: containView.bottomAnchor),
+                targetViewController.view.topAnchor.constraint(equalTo: containView.topAnchor),
+                ])
+            targetViewController.endAppearanceTransition()
+            targetViewController.didMove(toParent: self)
+            targetViewController.view.layoutSubviews()
+        }
+        
+
         containView.viewController = targetViewController
         
         let scrollView = targetViewController.mp_ChildScrollView()
-        scrollView.mp_originOffset = scrollView.contentOffset
+        scrollView.mp_originOffset = scrollView.contentOffset == .zero ? nil : scrollView.contentOffset
     
         if let _ = headerViewFor(self) {
             if mainScrollView.contentOffset.y < sillValue {
@@ -471,7 +475,7 @@ open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource
             , let viewController = containView.viewController else {
             return
         }
-        viewController.mp_clearFromParent()
+       // viewController.mp_clearFromParent()
         if memoryCache[index] == nil {
             pageController(self, willCache: viewController, forItemAt: index)
             memoryCache[index] = viewController

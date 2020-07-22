@@ -281,8 +281,8 @@ public class MPPageViewController: MPPageBaseViewController {
 extension MPPageViewController: MPMenuViewDelegate {
     public func menuView(_ menuView: MPMenuView, didSelectedItemAt index: Int) {
         guard index < self.menuContents.count else { return }
-        let animation = abs(self.currentIndex - index) == 1 ? true : false
-        setSelect(index: index, animation: animation)
+        //let animation = abs(self.currentIndex - index) == 1 ? true : false
+        setSelect(index: index, animation: true)
     
     }
 }
