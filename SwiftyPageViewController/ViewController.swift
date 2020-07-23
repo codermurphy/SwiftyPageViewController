@@ -21,7 +21,7 @@ class ViewController: UIViewController {
         self.contentView.delegate = self
     }
     
-    private let styles: [String] = ["无HeaderView-刷新在顶部","无HeaderView-刷新菜单栏底部","有HeaderView-刷新在顶部","有HeaderView-刷新在菜单栏底部","固定headerView","headerView放大","Menu在Navigation中","Menu带有额外View"]
+    private let styles: [String] = ["无HeaderView-刷新在顶部","无HeaderView-刷新菜单栏底部","有HeaderView-刷新在顶部","有HeaderView-刷新在菜单栏底部","固定headerView","headerView放大","Menu在Navigation中","Menu带有额外View","Menu在底部"]
 
 }
 
@@ -268,6 +268,25 @@ extension ViewController: UITableViewDelegate {
             let extarView = MPPageMenuContainer()
             extarView.backgroundColor = .red
             let next = MPPageViewController(configs: configs, menuContents: menus, controllers: controllers ,headerView:headerView,refreshPosition: .headerTop,menuViewHeight: 40,menuExtraView: extarView,menuExtraPoistion:.left(width: 40) ,defaultMenuPinHeight: 0, defaultIndex: 0)
+            self.navigationController?.pushViewController(next, animated: true)
+        case 8:
+            let indicatorBackgroundColor: MPIndicatorStyle = .backgroundColor(.brown)
+            let indicatorHeight: MPIndicatorStyle = .height(3)
+            let indicatrIsHidden: MPIndicatorStyle = .hidden(false)
+            let indicatorCornor: MPIndicatorStyle = .cornerRadius(1.5)
+            let indicatorPosition: MPIndicatorStyle = .position(.bottom)
+            let indicatorShape: MPIndicatorStyle = .shape(.line(isAutoWidth: true, width: 0))
+            
+            let indicatorStyle: MPMenuStyle = .indicatorStyle(MPIndicatorViewStyle(parts: indicatorBackgroundColor,indicatorHeight,indicatrIsHidden,indicatorCornor,indicatorPosition,indicatorShape))
+            
+            let bottomLineStyle: MPMenuStyle = .bottomLineStyle(MPBottomLineViewStyle(parts: .backgroundColor(.red),.height(1),.hidden(false),.position(.top)))
+                
+            let switchStyle: MPMenuStyle = .switchStyle(.line)
+            let layoutStyle: MPMenuStyle = .layoutStyle(.auto)
+                
+            let configs = [normalTextFont,selectedTextFont,normalTextColor,selectedTextColor,itemSpace,contentInset,indicatorStyle,bottomLineStyle,switchStyle,layoutStyle]
+            
+            let next = MPPageViewController(configs: configs, menuContents: menus, controllers: controllers,refreshPosition: .menuTop ,menuViewHeight: 40, menuPoision: .bottom, defaultMenuPinHeight: 0, defaultIndex: 0)
             self.navigationController?.pushViewController(next, animated: true)
         default:
             break

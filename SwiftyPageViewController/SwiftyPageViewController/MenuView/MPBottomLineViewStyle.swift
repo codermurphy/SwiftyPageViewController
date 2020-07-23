@@ -13,6 +13,12 @@ public enum MPBottomLineStyle {
     case backgroundColor(UIColor)
     case height(CGFloat)
     case hidden(Bool)
+    case position(MPBottomLinePosistion)
+}
+
+public enum MPBottomLinePosistion {
+    case top
+    case bottom
 }
 
 
@@ -36,6 +42,8 @@ public class MPBottomLineViewStyle {
         }
     }
     
+    public var position: MPBottomLinePosistion = .bottom
+    
     weak var targetView: UIView? {
         didSet {
             targetView?.backgroundColor = backgroundColor
@@ -57,6 +65,8 @@ public class MPBottomLineViewStyle {
                 height = value
             case .hidden(let value):
                 hidden = value
+            case .position(let value):
+                position = value
             }
         }
     }

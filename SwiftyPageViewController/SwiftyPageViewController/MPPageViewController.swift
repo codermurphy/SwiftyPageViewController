@@ -102,6 +102,7 @@ public class MPPageViewController: MPPageBaseViewController {
         self.menuView.titles = self.menuContents
         
         if self.isFixedHeaderView { self.currentChildScrollView?.mp_isCanScroll = true }
+        //if self.refreshPosition == .menuBottom { self.currentChildScrollView?.mp_isCanScroll = true}
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -197,7 +198,7 @@ public class MPPageViewController: MPPageBaseViewController {
         switch self.menuPosition {
         case .normal:
             return self.headerView
-        case .navigation:
+        case .navigation,.bottom:
             return nil
         }
     }
@@ -206,7 +207,7 @@ public class MPPageViewController: MPPageBaseViewController {
         switch self.menuPosition {
         case .normal:
              return self.defaultHeaderHeight
-        case .navigation:
+        case .navigation,.bottom:
             return 0
         }
     }
@@ -240,7 +241,9 @@ public class MPPageViewController: MPPageBaseViewController {
     public override func pageController(_ pageController: MPPageBaseViewController, mainScrollViewDidScroll scrollView: UIScrollView) {
         if scrollView.contentOffset.y <= 0 { self.zoomHeaderView(offSetY: scrollView.contentOffset.y) }
         if scrollView.contentOffset.y > 0 {
-            let progress = scrollView.contentOffset.y / (self.defaultHeaderHeight - self.defaultMenuPinHeight)
+            var progress = scrollView.contentOffset.y / (self.defaultHeaderHeight - self.defaultMenuPinHeight)
+            if !scrollView.mp_isCanScroll { progress = 1}
+            debugPrint(progress)
             self.pageDelegate?.pageController?(self, progress: progress > 1 ? 1 : progress)
         }
     }

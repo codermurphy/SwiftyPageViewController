@@ -400,7 +400,13 @@ public class MPMenuView: UIView {
         addSubview(bottomLineView)
         bottomLineView.snp.makeConstraints { (make) in
             make.leading.trailing.equalToSuperview()
-            make.bottom.equalToSuperview()
+            switch bottomLineViewStyle.position {
+            case .bottom:
+                make.bottom.equalToSuperview()
+            case .top:
+                make.top.equalToSuperview()
+            }
+            
         }
      
         if let nonilView = extraView { self.bringSubviewToFront(nonilView) }

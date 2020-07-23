@@ -12,8 +12,13 @@ open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource
     
     // MARK: - menu所在位置
     public enum MenuPosition {
+        
+        /// 顶部 如果有headerView  在headerview顶部
         case normal
+        /// 导航栏
         case navigation(position: MenuPostionNavigation,width: CGFloat)
+        /// 底部
+        case bottom
     }
     
     public enum MenuPostionNavigation {
@@ -182,132 +187,191 @@ open class MPPageBaseViewController: UIViewController,MPPageControllerDataSource
     
     private func setupOriginContent() {
         
-        mainScrollView.headerViewHeight = headerViewHeight
-        mainScrollView.menuViewHeight = menuViewHeight
         if #available(iOS 11.0, *) {
             mainScrollView.contentInsetAdjustmentBehavior = .never
         } else {
             automaticallyAdjustsScrollViewInsets = false
         }
-        
-        view.addSubview(mainScrollView)
         let contentInset = contentInsetFor(self)
-        var constraints: [NSLayoutConstraint] = []
-        if #available(iOS 11.0, *) {
-            constraints = [
-                mainScrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: contentInset.top),
-                mainScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentInset.left),
-                mainScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -contentInset.bottom),
-                mainScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentInset.right)
-            ]
-        } else {
-            constraints = [
-                mainScrollView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: contentInset.top),
-                mainScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentInset.left),
-                mainScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -contentInset.bottom),
-                mainScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentInset.right)
-            ]
-        }
-
-        mainScrollViewConstraints = constraints
-        NSLayoutConstraint.activate(constraints)
-        
-        if let _ = headerViewFor(self) {
-            mainScrollView.addSubview(headerContentView)
-            headerContentView.translatesAutoresizingMaskIntoConstraints = false
-            
-            let headerContentViewHeight = headerContentView.heightAnchor.constraint(equalToConstant: headerViewHeight)
-            headerContentViewHeight.priority = .defaultHigh
-            
-            let headerContentViewTop = headerContentView.topAnchor.constraint(equalTo: mainScrollView.topAnchor)
-            headerContentViewTop.priority = .defaultHigh
-            
-            headerViewConstraint = headerContentViewHeight
-            NSLayoutConstraint.activate([
-                headerContentView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
-                headerContentView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
-                headerContentViewTop,
-                headerContentViewHeight,
-            ])
-        }
-
         
         switch self.menuPosition {
-        case .normal:
-            mainScrollView.addSubview(menuContentView)
+        case .bottom:
+            self.view.addSubview(menuContentView)
             menuContentView.translatesAutoresizingMaskIntoConstraints = false
-            
-            let menuContentViewHeight = menuContentView.heightAnchor.constraint(equalToConstant: menuViewHeight)
-            menuViewConstraint = menuContentViewHeight
-            NSLayoutConstraint.activate([
-                menuContentView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
-                menuContentView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
-                menuContentView.widthAnchor.constraint(equalTo: mainScrollView.widthAnchor),
-                menuContentView.topAnchor.constraint(equalTo: headerViewFor(self) ==  nil ? mainScrollView.topAnchor :headerContentView.bottomAnchor),
-                menuContentViewHeight
-            ])
-        case let .navigation(position, width):
-            menuContentView.frame.size = CGSize(width: width, height: 44)
-            switch position {
-            case .center:
-                self.navigationItem.titleView = menuContentView
-            case .left:
-                self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: menuContentView)
-            case .right:
-                self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: menuContentView)
+            var menuContentconstraints: [NSLayoutConstraint] = []
+            if #available(iOS 11.0, *) {
+                menuContentconstraints = [
+                    menuContentView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentInset.left),
+                    menuContentView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -contentInset.bottom),
+                    menuContentView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentInset.right),
+                    menuContentView.heightAnchor.constraint(equalToConstant: menuViewHeight)
+                ]
+            } else {
+                menuContentconstraints = [
+                    menuContentView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentInset.left),
+                    menuContentView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -contentInset.bottom),
+                    menuContentView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentInset.right),
+                    menuContentView.heightAnchor.constraint(equalToConstant: menuViewHeight)
+                ]
             }
-            break
-        }
+            NSLayoutConstraint.activate(menuContentconstraints)
+            
+            self.view.addSubview(contentScrollView)
+            var contentScrollViewconstraints: [NSLayoutConstraint] = []
+            if #available(iOS 11.0, *) {
+                contentScrollViewconstraints = [
+                    contentScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: contentInset.left),
+                    contentScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -contentInset.right),
+                    contentScrollView.bottomAnchor.constraint(equalTo: self.menuContentView.topAnchor,constant: contentInset.top),
+                    contentScrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
+                ]
+            } else {
+                contentScrollViewconstraints = [
+                    contentScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: contentInset.left),
+                    contentScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -contentInset.right),
+                    contentScrollView.bottomAnchor.constraint(equalTo: self.menuContentView.topAnchor,constant: contentInset.top),
+                    contentScrollView.topAnchor.constraint(equalTo: view.topAnchor)
+                ]
+            }
+            NSLayoutConstraint.activate(contentScrollViewconstraints)
+            contentScrollView.addSubview(contentStackView)
 
-        
-        mainScrollView.addSubview(contentScrollView)
-        
-        let contentScrollViewHeight = contentScrollView.heightAnchor.constraint(equalTo: mainScrollView.heightAnchor, constant: -menuViewHeight - menuViewPinHeight)
-        contentScrollViewConstraint = contentScrollViewHeight
-        
-        switch self.menuPosition {
-        case .normal:
             NSLayoutConstraint.activate([
-                contentScrollView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
-                contentScrollView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
-                contentScrollView.bottomAnchor.constraint(equalTo: mainScrollView.bottomAnchor),
-                contentScrollView.widthAnchor.constraint(equalTo: mainScrollView.widthAnchor),
-                contentScrollView.topAnchor.constraint(equalTo: menuContentView.bottomAnchor),
-                contentScrollViewHeight
+                contentStackView.leadingAnchor.constraint(equalTo: contentScrollView.leadingAnchor),
+                contentStackView.trailingAnchor.constraint(equalTo: contentScrollView.trailingAnchor),
+                contentStackView.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
+                contentStackView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
+                contentStackView.heightAnchor.constraint(equalTo: contentScrollView.heightAnchor)
+            ])
+            
+        case .normal,.navigation:
+            
+            mainScrollView.headerViewHeight = headerViewHeight
+            mainScrollView.menuViewHeight = menuViewHeight
+
+            
+            view.addSubview(mainScrollView)
+            
+            var constraints: [NSLayoutConstraint] = []
+            if #available(iOS 11.0, *) {
+                constraints = [
+                    mainScrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: contentInset.top),
+                    mainScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentInset.left),
+                    mainScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -contentInset.bottom),
+                    mainScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentInset.right)
+                ]
+            } else {
+                constraints = [
+                    mainScrollView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: contentInset.top),
+                    mainScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: contentInset.left),
+                    mainScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -contentInset.bottom),
+                    mainScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -contentInset.right)
+                ]
+            }
+
+            mainScrollViewConstraints = constraints
+            NSLayoutConstraint.activate(constraints)
+            
+            if let _ = headerViewFor(self) {
+                mainScrollView.addSubview(headerContentView)
+                headerContentView.translatesAutoresizingMaskIntoConstraints = false
+                
+                let headerContentViewHeight = headerContentView.heightAnchor.constraint(equalToConstant: headerViewHeight)
+                headerContentViewHeight.priority = .defaultHigh
+                
+                let headerContentViewTop = headerContentView.topAnchor.constraint(equalTo: mainScrollView.topAnchor)
+                headerContentViewTop.priority = .defaultHigh
+                
+                headerViewConstraint = headerContentViewHeight
+                NSLayoutConstraint.activate([
+                    headerContentView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
+                    headerContentView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
+                    headerContentViewTop,
+                    headerContentViewHeight,
                 ])
-        case .navigation:
+            }
+
+            
+            switch self.menuPosition {
+            case .normal:
+                mainScrollView.addSubview(menuContentView)
+                menuContentView.translatesAutoresizingMaskIntoConstraints = false
+                
+                let menuContentViewHeight = menuContentView.heightAnchor.constraint(equalToConstant: menuViewHeight)
+                menuViewConstraint = menuContentViewHeight
+                NSLayoutConstraint.activate([
+                    menuContentView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
+                    menuContentView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
+                    menuContentView.widthAnchor.constraint(equalTo: mainScrollView.widthAnchor),
+                    menuContentView.topAnchor.constraint(equalTo: headerViewFor(self) ==  nil ? mainScrollView.topAnchor :headerContentView.bottomAnchor),
+                    menuContentViewHeight
+                ])
+            case let .navigation(position, width):
+                menuContentView.frame.size = CGSize(width: width, height: 44)
+                switch position {
+                case .center:
+                    self.navigationItem.titleView = menuContentView
+                case .left:
+                    self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: menuContentView)
+                case .right:
+                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: menuContentView)
+                }
+                break
+            case .bottom:
+                break
+            }
+
+            
+            mainScrollView.addSubview(contentScrollView)
+            
+            let contentScrollViewHeight = contentScrollView.heightAnchor.constraint(equalTo: mainScrollView.heightAnchor, constant: -menuViewHeight - menuViewPinHeight)
+            contentScrollViewConstraint = contentScrollViewHeight
+            
+            switch self.menuPosition {
+            case .normal:
+                NSLayoutConstraint.activate([
+                    contentScrollView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
+                    contentScrollView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
+                    contentScrollView.bottomAnchor.constraint(equalTo: mainScrollView.bottomAnchor),
+                    contentScrollView.widthAnchor.constraint(equalTo: mainScrollView.widthAnchor),
+                    contentScrollView.topAnchor.constraint(equalTo: menuContentView.bottomAnchor),
+                    contentScrollViewHeight
+                    ])
+            case .navigation:
+                NSLayoutConstraint.activate([
+                    contentScrollView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
+                    contentScrollView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
+                    contentScrollView.bottomAnchor.constraint(equalTo: mainScrollView.bottomAnchor),
+                    contentScrollView.widthAnchor.constraint(equalTo: mainScrollView.widthAnchor),
+                    contentScrollView.topAnchor.constraint(equalTo: mainScrollView.topAnchor),
+                    contentScrollViewHeight
+                    ])
+            case .bottom:
+                break
+            }
+            
+
+            
+            
+            contentScrollView.addSubview(contentStackView)
+            
             NSLayoutConstraint.activate([
-                contentScrollView.leadingAnchor.constraint(equalTo: mainScrollView.leadingAnchor),
-                contentScrollView.trailingAnchor.constraint(equalTo: mainScrollView.trailingAnchor),
-                contentScrollView.bottomAnchor.constraint(equalTo: mainScrollView.bottomAnchor),
-                contentScrollView.widthAnchor.constraint(equalTo: mainScrollView.widthAnchor),
-                contentScrollView.topAnchor.constraint(equalTo: mainScrollView.topAnchor),
-                contentScrollViewHeight
-                ])
+                contentStackView.leadingAnchor.constraint(equalTo: contentScrollView.leadingAnchor),
+                contentStackView.trailingAnchor.constraint(equalTo: contentScrollView.trailingAnchor),
+                contentStackView.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
+                contentStackView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
+                contentStackView.heightAnchor.constraint(equalTo: contentScrollView.heightAnchor)
+            ])
+            
+            switch self.menuPosition {
+            case .normal:
+                mainScrollView.bringSubviewToFront(headerContentView)
+                mainScrollView.bringSubviewToFront(menuContentView)
+            case .navigation,.bottom:
+                break
+            }
+            
         }
-        
-
-        
-        
-        contentScrollView.addSubview(contentStackView)
-        
-        NSLayoutConstraint.activate([
-            contentStackView.leadingAnchor.constraint(equalTo: contentScrollView.leadingAnchor),
-            contentStackView.trailingAnchor.constraint(equalTo: contentScrollView.trailingAnchor),
-            contentStackView.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
-            contentStackView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
-            contentStackView.heightAnchor.constraint(equalTo: contentScrollView.heightAnchor)
-        ])
-        
-        switch self.menuPosition {
-        case .normal:
-            mainScrollView.bringSubviewToFront(headerContentView)
-            mainScrollView.bringSubviewToFront(menuContentView)
-        case .navigation:
-            break
-        }
-        
-
     }
     
     internal func updateOriginContent() {
